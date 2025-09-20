@@ -1,31 +1,41 @@
 openapi: 3.0.3
 info:
   title: Employee Onboarding API
-  version: 1.0.1
+  version: 1.1.0
   description: >
     Semua respons mengikuti common envelope: {error, message, code, time_in, time_out, data, trace_id, request_id}.
 servers:
-  - url: https://api.company.com
+  - url: http://localhost:3001
 security:
   - bearerAuth: []
 
 components:
   securitySchemes:
-    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 
-  # ========= Common Response Envelope =========
   schemas:
     ApiError:
       type: object
       required: [code, message]
       properties:
-        code: { type: string, example: validation_failed }
-        message: { type: string, example: "email is already in use" }
-        field: { type: string, nullable: true, example: email }
+        code:
+          type: string
+          example: validation_failed
+        message:
+          type: string
+          example: email is already in use
+        field:
+          type: string
+          nullable: true
+          example: email
         details:
           type: object
           additionalProperties: true
           nullable: true
+
     ApiEnvelope:
       type: object
       required: [message, code, time_in, time_out, data, trace_id, request_id]
@@ -36,46 +46,273 @@ components:
             - type: "null"
           nullable: true
           example: null
-        message: { type: string, example: Success }
-        code: { type: string, description: "Business/result code", example: "345" }
-        time_in: { type: string, format: date-time }
-        time_out: { type: string, format: date-time }
+        message:
+          type: string
+          example: Success
+        code:
+          type: string
+          description: Business/result code (string, bukan HTTP code)
+          example: "20000"
+        time_in:
+          type: string
+          format: date-time
+        time_out:
+          type: string
+          format: date-time
         data:
-          description: "Payload sebenarnya (object/array/pagination)"
+          description: Payload sebenarnya (object/array/pagination)
           nullable: true
-        trace_id: { type: string, example: "b3a1e4c9f8..." }
-        request_id: { type: string, example: "req_9f2..." }
+        trace_id:
+          type: string
+          example: b3a1e4c9f8...
+        request_id:
+          type: string
+          example: req_9f2...
+    
+    ############################################################
+    # ======================= Domain ========================= #
+    ############################################################
 
-    # ==== Domain Schemas (ringkas; sama seperti sebelumnya) ====
+    # ---------- Employee (BARU & DETAIL) ----------
+    CountryCode:
+      type: string
+      description: ISO 3166-1 alpha-2
+      example: ID
+      minLength: 2
+      maxLength: 2
+
+    CurrencyCode:
+      type: string
+      description: ISO 4217
+      example: IDR
+      minLength: 3
+      maxLength: 3
+
+    EmploymentType:
+      type: string
+      enum: [FullTime, PartTime, Contractor, Intern, Temporary]
+
+    ContractType:
+      type: string
+      enum: [Permanent, FixedTerm, Internship, Consultant]
+
+    Employee:
+      type: object
+      required:
+        [id, employee_code, legal_full_name, primary_email, country, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        employee_code:
+          type: string
+          description: Unique employee code (HRIS)
+          example: EMP-2025-00123
+        legal_full_name: { type: string, example: "John Doe" }
+        preferred_name: { type: string, nullable: true, example: "John" }
+        primary_email:
+          type: string
+          format: email
+          description: Unik di sistem (constraint unik)
+        secondary_email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          example: "+62-812-3456-7890"
+          nullable: true
+        national_id:
+          type: string
+          description: Nomor identitas nasional (hash/tersimpan aman)
+          nullable: true
+          example: "317XXXXXXXXXXXXX"
+        dob:
+          type: string
+          format: date
+          nullable: true
+        country:
+          $ref: '#/components/schemas/CountryCode'
+        address:
+          type: object
+          nullable: true
+          properties:
+            line1: { type: string }
+            line2: { type: string, nullable: true }
+            city: { type: string }
+            state: { type: string, nullable: true }
+            postal_code: { type: string, nullable: true }
+            country: { $ref: '#/components/schemas/CountryCode' }
+        employment:
+          type: object
+          properties:
+            position: { type: string, example: "Backend Engineer" }
+            department: { type: string, example: "Engineering", nullable: true }
+            manager_name: { type: string, example: "Jane Manager" }
+            type: { $ref: '#/components/schemas/EmploymentType' }
+            contract_type: { $ref: '#/components/schemas/ContractType' }
+            start_date: { type: string, format: date, nullable: true }
+            end_date: { type: string, format: date, nullable: true }
+            location: { type: string, example: "Jakarta", nullable: true }
+        payroll:
+          type: object
+          nullable: true
+          properties:
+            currency: { $ref: '#/components/schemas/CurrencyCode' }
+            bank_account_number: { type: string, nullable: true }
+            bank_name: { type: string, nullable: true }
+            tax_id: { type: string, nullable: true }
+        documents:
+          type: array
+          description: Dokumen identitas/kontrak terlampir
+          items:
+            $ref: '#/components/schemas/EmployeeDocument'
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        archived_at: { type: string, format: date-time, nullable: true }
+
+    EmployeeCreate:
+      type: object
+      required: [legal_full_name, primary_email, country]
+      properties:
+        legal_full_name: { type: string }
+        preferred_name: { type: string, nullable: true }
+        primary_email: { type: string, format: email }
+        secondary_email: { type: string, format: email, nullable: true }
+        phone: { type: string, nullable: true }
+        national_id: { type: string, nullable: true }
+        dob: { type: string, format: date, nullable: true }
+        country: { $ref: '#/components/schemas/CountryCode' }
+        address:
+          type: object
+          nullable: true
+          properties:
+            line1: { type: string }
+            line2: { type: string, nullable: true }
+            city: { type: string }
+            state: { type: string, nullable: true }
+            postal_code: { type: string, nullable: true }
+            country: { $ref: '#/components/schemas/CountryCode' }
+        employment:
+          type: object
+          properties:
+            position: { type: string }
+            department: { type: string, nullable: true }
+            manager_name: { type: string }
+            type: { $ref: '#/components/schemas/EmploymentType' }
+            contract_type: { $ref: '#/components/schemas/ContractType' }
+            start_date: { type: string, format: date, nullable: true }
+            end_date: { type: string, format: date, nullable: true }
+            location: { type: string, nullable: true }
+        payroll:
+          type: object
+          nullable: true
+          properties:
+            currency: { $ref: '#/components/schemas/CurrencyCode' }
+            bank_account_number: { type: string, nullable: true }
+            bank_name: { type: string, nullable: true }
+            tax_id: { type: string, nullable: true }
+
+    EmployeeUpdate:
+      type: object
+      properties:
+        legal_full_name: { type: string }
+        preferred_name: { type: string, nullable: true }
+        primary_email: { type: string, format: email }
+        secondary_email: { type: string, format: email, nullable: true }
+        phone: { type: string, nullable: true }
+        national_id: { type: string, nullable: true }
+        dob: { type: string, format: date, nullable: true }
+        country: { $ref: '#/components/schemas/CountryCode' }
+        address:
+          type: object
+          nullable: true
+          properties:
+            line1: { type: string }
+            line2: { type: string, nullable: true }
+            city: { type: string }
+            state: { type: string, nullable: true }
+            postal_code: { type: string, nullable: true }
+            country: { $ref: '#/components/schemas/CountryCode' }
+        employment:
+          type: object
+          properties:
+            position: { type: string }
+            department: { type: string, nullable: true }
+            manager_name: { type: string }
+            type: { $ref: '#/components/schemas/EmploymentType' }
+            contract_type: { $ref: '#/components/schemas/ContractType' }
+            start_date: { type: string, format: date, nullable: true }
+            end_date: { type: string, format: date, nullable: true }
+            location: { type: string, nullable: true }
+        payroll:
+          type: object
+          nullable: true
+          properties:
+            currency: { $ref: '#/components/schemas/CurrencyCode' }
+            bank_account_number: { type: string, nullable: true }
+            bank_name: { type: string, nullable: true }
+            tax_id: { type: string, nullable: true }
+
+    EmployeeDocument:
+      type: object
+      required: [id, type, file_name, url]
+      properties:
+        id: { type: string, format: uuid }
+        type:
+          type: string
+          enum: [ID, Tax, NDA, Contract, Other]
+        file_name: { type: string }
+        content_type: { type: string, example: application/pdf }
+        size: { type: integer, example: 123456 }
+        url: { type: string }
+        uploaded_at: { type: string, format: date-time }
+
+    # ---------- Onboarding ----------
     OnboardingStatus:
       type: string
       enum: [Draft, PendingApproval, ChangesRequested, InITFinance, Orientation, Completed, Canceled]
+
     OnboardingRequest:
       type: object
-      required: [id, status, employeeName, email, position, manager, createdAt]
+      required: [id, status, employee_name, email, position, manager, created_at]
       properties:
         id: { type: string, format: uuid }
         status: { $ref: '#/components/schemas/OnboardingStatus' }
-        employeeName: { type: string }
+        employee_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: >
+            Referensi ke entitas Employee (jika sudah dibuat/di-link).
+            Disarankan selalu mengikat request ke Employee untuk mencegah mismatch.
+        employee_name: { type: string }
         email: { type: string, format: email }
         position: { type: string }
         department: { type: string, nullable: true }
-        startDate: { type: string, format: date, nullable: true }
+        start_date: { type: string, format: date, nullable: true }
         manager: { type: string }
         notes: { type: string, nullable: true }
-        createdAt: { type: string, format: date-time }
-        updatedAt: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
     OnboardingRequestCreate:
       type: object
-      required: [employeeName, email, position, manager]
+      required: [employee_name, email, position, manager]
       properties:
-        employeeName: { type: string }
+        employee_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: >
+            Jika sudah ada Employee, kirimkan untuk linkage (prefer).
+            Jika tidak ada, backend dapat melakukan match otomatis berdasarkan email.
+        employee_name: { type: string }
         email: { type: string, format: email }
         position: { type: string }
         department: { type: string, nullable: true }
-        startDate: { type: string, format: date, nullable: true }
+        start_date: { type: string, format: date, nullable: true }
         manager: { type: string }
         notes: { type: string, nullable: true, maxLength: 2000 }
+
     OnboardingRequestDetail:
       allOf:
         - $ref: '#/components/schemas/OnboardingRequest'
@@ -88,24 +325,39 @@ components:
             orientation:
               type: object
               properties:
-                scheduledAt: { type: string, format: date-time, nullable: true }
+                scheduled_at: { type: string, format: date-time, nullable: true }
                 done: { type: boolean, default: false }
+            employee_snapshot:
+              $ref: '#/components/schemas/Employee'
+              description: Snapshot ringan data Employee untuk tampilan FE.
+
     TaskType:
       type: string
       enum: [IT.CreateAccount, IT.AssignLaptop, IT.GrantSystemAccess, FIN.AddToPayroll, FIN.TaxForm, FIN.BankVerification, ORI.Schedule, ORI.Orientation]
-    TaskStatus: { type: string, enum: [Open, InProgress, Done, Blocked] }
+
+    TaskStatus:
+      type: string
+      enum: [Open, InProgress, Done, Blocked]
+
     Task:
       type: object
       required: [id, requestId, type, status]
       properties:
         id: { type: string, format: uuid }
         requestId: { type: string, format: uuid }
+        employee_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Ikatan ke Employee (membantu query "My tasks for this employee").
         type: { $ref: '#/components/schemas/TaskType' }
         status: { $ref: '#/components/schemas/TaskStatus' }
-        assigneeRole: { type: string, enum: [HR, Manager, IT, Finance, Orientation] }
+        assignee_role: { type: string, enum: [HR, Manager, IT, Finance, Orientation] }
         note: { type: string, nullable: true }
-        createdAt: { type: string, format: date-time }
-        updatedAt: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
+    # ---------- Pagination ----------
     PaginatedOnboardingRequests:
       type: object
       properties:
@@ -114,6 +366,7 @@ components:
           items: { $ref: '#/components/schemas/OnboardingRequest' }
         nextCursor: { type: string, nullable: true }
         pageSize: { type: integer, example: 25 }
+
     PaginatedTasks:
       type: object
       properties:
@@ -123,58 +376,407 @@ components:
         nextCursor: { type: string, nullable: true }
         pageSize: { type: integer, example: 25 }
 
-  # ==== Reusable "Envelope<SpecificSchema>" via allOf ====
-  # Pakai ini di responses: schema: { allOf: [ { $ref: '#/components/schemas/ApiEnvelope' }, { type: object, properties: { data: { $ref: '...' } } } ] }
-  x-enveloped:
-    OnboardingRequest:
+    PaginatedEmployees:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Employee' }
+        nextCursor: { type: string, nullable: true }
+        pageSize: { type: integer, example: 25 }
+
+    # ---------- Enveloped Schemas ----------
+    EnvelopeOnboardingRequest:
       allOf:
         - $ref: '#/components/schemas/ApiEnvelope'
         - type: object
           properties:
             data:
               $ref: '#/components/schemas/OnboardingRequest'
-    OnboardingRequestDetail:
+
+    EnvelopeOnboardingRequestDetail:
       allOf:
         - $ref: '#/components/schemas/ApiEnvelope'
         - type: object
           properties:
             data:
               $ref: '#/components/schemas/OnboardingRequestDetail'
-    PaginatedOnboardingRequests:
+
+    EnvelopePaginatedOnboardingRequests:
       allOf:
         - $ref: '#/components/schemas/ApiEnvelope'
         - type: object
           properties:
             data:
               $ref: '#/components/schemas/PaginatedOnboardingRequests'
-    Task:
-      allOf:
-        - $ref: '#/components/schemas/ApiEnvelope'
-        - type: object
-          properties:
-            data: { $ref: '#/components/schemas/Task' }
-    PaginatedTasks:
-      allOf:
-        - $ref: '#/components/schemas/ApiEnvelope'
-        - type: object
-          properties:
-            data: { $ref: '#/components/schemas/PaginatedTasks' }
-    Empty:
-      allOf:
-        - $ref: '#/components/schemas/ApiEnvelope'
-        - type: object
-          properties:
-            data: { type: "null", nullable: true }
 
+    EnvelopeTask:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Task'
+
+    EnvelopePaginatedTasks:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PaginatedTasks'
+
+    EnvelopeEmployee:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Employee'
+
+    EnvelopePaginatedEmployees:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PaginatedEmployees'
+
+    EnvelopeEmpty:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              type: "null"
+              nullable: true
+    # ---------- NEW: Payroll update payload ----------
+    PayrollUpdate:
+      type: object
+      description: Update payroll fields for an employee
+      properties:
+        currency: { $ref: '#/components/schemas/CurrencyCode' }
+        bank_account_number: { type: string, nullable: true }
+        bank_name: { type: string, nullable: true }
+        tax_id: { type: string, nullable: true }
+      example:
+        currency: IDR
+        bank_account_number: "1234567890"
+        bank_name: "Bank BNI"
+        tax_id: "NPWP-09.123.456.7-890.000"
+
+    # ---------- (Already defined earlier) EmployeeDocument used by upload ----------
+    # EmployeeDocument schema already exists in your spec.
+
+    # ---------- NEW: Audit Trail ----------
+    AuditEntityType:
+      type: string
+      enum: [OnboardingRequest, Employee, Task, Document, System]
+
+    AuditEvent:
+      type: object
+      required: [id, time, actor, action, entity_type, entity_id]
+      properties:
+        id: { type: string, format: uuid }
+        time: { type: string, format: date-time }
+        actor:
+          type: object
+          properties:
+            id: { type: string, nullable: true }
+            name: { type: string, nullable: true }
+            role: { type: string, enum: [HR, Manager, IT, Finance, Orientation, System] }
+        action:
+          type: string
+          example: "Submit"  # e.g., Submit, Approve, RequestChanges, ChecklistTick, UploadDocument
+        entity_type: { $ref: '#/components/schemas/AuditEntityType' }
+        entity_id: { type: string }
+        request_id: { type: string, nullable: true }
+        trace_id: { type: string, nullable: true }
+        metadata:
+          type: object
+          additionalProperties: true
+          nullable: true
+
+    PaginatedAuditEvents:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/AuditEvent' }
+        nextCursor: { type: string, nullable: true }
+        pageSize: { type: integer, example: 50 }
+
+    # ---------- NEW: Envelopes ----------
+    EnvelopeEmployeeDocument:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/EmployeeDocument'
+
+    EnvelopePaginatedEmployeeDocuments:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items: { $ref: '#/components/schemas/EmployeeDocument' }
+                nextCursor: { type: string, nullable: true }
+                pageSize: { type: integer, example: 25 }
+
+    EnvelopeAuditEvent:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data: { $ref: '#/components/schemas/AuditEvent' }
+
+    EnvelopePaginatedAuditEvents:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data: { $ref: '#/components/schemas/PaginatedAuditEvents' }
+
+
+    
+    # ---------- NEW: Priority & Checklist ----------
+    TaskPriority:
+      type: string
+      enum: [Low, Normal, High, Urgent]
+      default: Normal
+
+    TaskChecklistItem:
+      type: object
+      required: [text, done]
+      properties:
+        text: { type: string, example: "Create Google Workspace account" }
+        done: { type: boolean, default: false }
+        done_at: { type: string, format: date-time, nullable: true }
+        actor: { type: string, nullable: true, example: "it.user@company.com" }
+
+    # ---------- NEW: TaskCreate for single create ----------
+    TaskCreate:
+      type: object
+      required: [type, assignee_role]
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          nullable: true
+          description: "Link ke onboarding request (opsional tapi direkomendasikan)."
+        employee_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: "Link ke Employee (jika relevan)."
+        type:
+          $ref: '#/components/schemas/TaskType'
+        assignee_role:
+          type: string
+          enum: [HR, Manager, IT, Finance, Orientation]
+        title:
+          type: string
+          example: "IT - Create company account"
+        description:
+          type: string
+          nullable: true
+          example: "Create SSO + email; set default groups."
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        due_date:
+          type: string
+          format: date-time
+          nullable: true
+        checklist:
+          type: array
+          items: { $ref: '#/components/schemas/TaskChecklistItem' }
+        metadata:
+          type: object
+          additionalProperties: true
+          nullable: true
+        # idempotency
+        request_id:
+          type: string
+          nullable: true
+          description: "Idempotency key untuk create (header juga didukung)."
+
+    # ---------- NEW: Bulk create ----------
+    TaskCreateBulk:
+      type: object
+      required: [items]
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          nullable: true
+          description: "Default requestId untuk semua item bila tidak diisi pada item."
+        items:
+          type: array
+          minItems: 1
+          items:
+            allOf:
+              - $ref: '#/components/schemas/TaskCreate'
+              - type: object
+                properties:
+                  requestId:
+                    type: string
+                    format: uuid
+                    nullable: true
+        request_id:
+          type: string
+          nullable: true
+          description: "Idempotency key untuk operasi bulk."
+
+    # ---------- NEW: Task generation template ----------
+    TaskTemplate:
+      type: string
+      enum:
+        - Default.IT                # 3 tugas IT: account, laptop, access
+        - Default.FIN               # 3 tugas Finance: payroll, tax, bank
+        - Default.ALL               # IT + Finance sekaligus
+        - Orientation.Setup         # Schedule orientation task
+      example: Default.ALL
+
+    GenerateTasksRequest:
+      type: object
+      required: [template]
+      properties:
+        template: { $ref: '#/components/schemas/TaskTemplate' }
+        override_due_days:
+          type: integer
+          nullable: true
+          example: 3
+          description: "Override due date relatif (hari) sejak hari ini untuk semua task."
+        request_id:
+          type: string
+          nullable: true
+          description: "Idempotency key untuk generate."
+
+    # ---------- NEW: Bulk result envelope ----------
+    TasksBulkResult:
+      type: object
+      properties:
+        created:
+          type: array
+          items: { $ref: '#/components/schemas/Task' }
+        skipped:
+          type: array
+          description: "Item dilewati karena idempotent/duplikat."
+          items:
+            type: object
+            properties:
+              reason: { type: string, example: "idempotent_duplicate" }
+              input:
+                $ref: '#/components/schemas/TaskCreate'
+        failed:
+          type: array
+          items:
+            type: object
+            properties:
+              error: { $ref: '#/components/schemas/ApiError' }
+              input: { $ref: '#/components/schemas/TaskCreate' }
+
+    EnvelopeTasksBulkResult:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/TasksBulkResult'
+
+  responses:
+    ErrorEnvelope:            # generic fallback 4xx/5xx
+      description: Error envelope (lihat field `error`)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiEnvelope'
+          examples:
+            generic_error:
+              value:
+                error: { code: "unknown_error", message: "unexpected error" }
+                message: "Failed"
+                code: "50000"
+                time_in: "2025-09-20T10:00:00Z"
+                time_out: "2025-09-20T10:00:00Z"
+                data: null
+                trace_id: "b3a1e4c9f8"
+                request_id: "req_9f2"
+
+    ValidationFailed:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiEnvelope'
+          examples:
+            validation_failed:
+              value:
+                error:
+                  code: "validation_failed"
+                  message: "email is already in use"
+                  field: "email"
+                message: "Failed"
+                code: "40001"
+                time_in: "2025-09-20T10:00:00Z"
+                time_out: "2025-09-20T10:00:00Z"
+                data: null
+                trace_id: "b3a1e4c9f8"
+                request_id: "req_9f2"
+
+    Unauthorized:
+      description: Unauthorized / token invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiEnvelope'
+          examples:
+            unauthorized:
+              value:
+                error: { code: "unauthorized", message: "invalid token" }
+                message: "Failed"
+                code: "40100"
+                time_in: "2025-09-20T10:00:00Z"
+                time_out: "2025-09-20T10:00:00Z"
+                data: null
+                trace_id: "b3a1e4c9f8"
+                request_id: "req_9f2"
+
+    RecordNotFound:
+      description: Record not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiEnvelope'
+          examples:
+            record_not_found:
+              value:
+                message: "Record Not Found"
+                code: "40004"
+                time_in: "2025-09-20T10:00:00Z"
+                time_out: "2025-09-20T10:00:00Z"
+                data: null
+                trace_id: "b3a1e4c9f8"
+                request_id: "req_9f2"
 paths:
+
   /api/v1/onboarding-requests:
     post:
       tags: [Onboarding Requests]
       summary: Create a new onboarding request (draft)
-      security: [{ bearerAuth: [] }]
+      description: >
+        Jika `employee_id` tidak dikirim, backend dapat melakukan "auto-match" ke Employee berdasarkan `email`.
+        Jika match ditemukan → `employee_id` di-set; jika tidak → tetap null (opsional FE memanggil endpoint match di /employees:match).
+      security: [ { bearerAuth: [] } ]
       parameters:
         - in: header
-          name: Idempotency-Key
+          name: request_id
           schema: { type: string }
           required: false
       requestBody:
@@ -187,31 +789,13 @@ paths:
           description: Draft created (enveloped)
           content:
             application/json:
-              schema: { $ref: '#/components/x-enveloped/OnboardingRequest' }
-              examples:
-                success:
-                  value:
-                    error: null
-                    message: "Success"
-                    code: "20100"
-                    time_in: "2025-09-20T10:00:00Z"
-                    time_out: "2025-09-20T10:00:01Z"
-                    data:
-                      id: "7b1b1f5d-0a6d-4c1a-9d45-90b8b0b4d2e0"
-                      status: "Draft"
-                      employeeName: "John Doe"
-                      email: "john.doe@example.com"
-                      position: "Backend Engineer"
-                      manager: "Jane Manager"
-                      createdAt: "2025-09-20T10:00:00Z"
-                      updatedAt: "2025-09-20T10:00:00Z"
-                    trace_id: "b3a1e4c9f8"
-                    request_id: "req_9f2"
+              schema: { $ref: '#/components/schemas/EnvelopeOnboardingRequest' }
         '400':
-          description: Validation error (enveloped)
+          description: Validation error
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/ApiEnvelope' }
+              schema:
+                $ref: '#/components/schemas/ApiEnvelope'
               examples:
                 validation_failed:
                   value:
@@ -223,45 +807,48 @@ paths:
                     data: null
                     trace_id: "b3a1e4c9f8"
                     request_id: "req_9f2"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/ErrorEnvelope'
     get:
       tags: [Onboarding Requests]
       summary: List requests (filterable)
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [] } ]
       parameters:
-        - in: query; name: status; schema: { type: string }
-        - in: query; name: department; schema: { type: string }
-        - in: query; name: date_from; schema: { type: string, format: date }
-        - in: query; name: date_to; schema: { type: string, format: date }
-        - in: query; name: cursor; schema: { type: string }
-        - in: query; name: page_size; schema: { type: integer, default: 25 }
+        - in: query
+          name: status
+          schema: { type: string }
+        - in: query
+          name: department
+          schema: { type: string }
+        - in: query
+          name: date_from
+          schema: { type: string, format: date }
+        - in: query
+          name: date_to
+          schema: { type: string, format: date }
+        - in: query
+          name: employee_id
+          schema: { type: string, format: uuid }
+        - in: query
+          name: cursor
+          schema: { type: string }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 25 }
       responses:
         '200':
           description: Paged list (enveloped)
           content:
             application/json:
-              schema: { $ref: '#/components/x-enveloped/PaginatedOnboardingRequests' }
-              examples:
-                page:
-                  value:
-                    error: null
-                    message: "Success"
-                    code: "20000"
-                    time_in: "2025-09-20T10:05:00Z"
-                    time_out: "2025-09-20T10:05:00Z"
-                    data:
-                      items:
-                        - { id: "1", status: "PendingApproval", employeeName: "A", email: "a@x.com", position: "FE", manager: "M", createdAt: "2025-09-18T01:00:00Z", updatedAt: "2025-09-18T01:00:00Z" }
-                        - { id: "2", status: "InITFinance", employeeName: "B", email: "b@x.com", position: "BE", manager: "M", createdAt: "2025-09-19T01:00:00Z", updatedAt: "2025-09-19T01:30:00Z" }
-                      nextCursor: "eyJpZCI6IjIifQ=="
-                      pageSize: 25
-                    trace_id: "b3a1e4c9f8"
-                    request_id: "req_9f2"
+              schema: { $ref: '#/components/schemas/EnvelopePaginatedOnboardingRequests' }
 
   /api/v1/onboarding-requests/{id}:
     get:
       tags: [Onboarding Requests]
       summary: Get request detail & tasks
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [] } ]
       parameters:
         - in: path
           name: id
@@ -272,11 +859,11 @@ paths:
           description: Detail (enveloped)
           content:
             application/json:
-              schema: { $ref: '#/components/x-enveloped/OnboardingRequestDetail' }
+              schema: { $ref: '#/components/schemas/EnvelopeOnboardingRequestDetail' }
     patch:
       tags: [Onboarding Requests]
       summary: Update fields (pre-approval)
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [] } ]
       parameters:
         - in: path
           name: id
@@ -292,69 +879,372 @@ paths:
           description: Updated (enveloped)
           content:
             application/json:
-              schema: { $ref: '#/components/x-enveloped/OnboardingRequest' }
+              schema: { $ref: '#/components/schemas/EnvelopeOnboardingRequest' }
 
   /api/v1/onboarding-requests/{id}/submit:
     post:
       tags: [Onboarding Requests]
       summary: Submit draft → PendingApproval
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [] } ]
       parameters:
-        - in: path; name: id; required: true; schema: { type: string, format: uuid }
-        - in: header; name: Idempotency-Key; schema: { type: string }
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+        - in: header
+          name: request_id
+          schema: { type: string }
       responses:
         '200':
           description: OK (enveloped)
           content:
             application/json:
-              schema: { $ref: '#/components/x-enveloped/OnboardingRequest' }
+              schema: { $ref: '#/components/schemas/EnvelopeOnboardingRequest' }
 
-  /api/v1/onboarding-requests/{id}/approve:
+  /api/v1/onboarding-requests/{id}/state:
     post:
       tags: [Onboarding Requests]
-      summary: Manager approval → InITFinance
-      security: [{ bearerAuth: [] }]
+      summary: Manager approval/return → InITFinance / ChangesRequested
+      security: [ { bearerAuth: [] } ]
       parameters:
-        - in: path; name: id; required: true; schema: { type: string, format: uuid }
-        - in: header; name: Idempotency-Key; schema: { type: string }
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+        - in: header
+          name: request_id
+          schema: { type: string }
       requestBody:
         content:
           application/json:
             schema:
               type: object
-              properties: { comment: { type: string, maxLength: 500 } }
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: [Approve, Return]
+                comment:
+                  type: string
+                  maxLength: 500
+                  description: "Required jika action=Return"
       responses:
         '200':
           description: OK (enveloped)
           content:
             application/json:
-              schema: { $ref: '#/components/x-enveloped/OnboardingRequestDetail' }
+              schema: { $ref: '#/components/schemas/EnvelopeOnboardingRequestDetail' }
 
+  /api/v1/tasks:bulk:
+    post:
+      tags: [Tasks]
+      summary: Create multiple tasks (bulk)
+      description: >
+        Membuat banyak task sekaligus untuk request/employee tertentu.
+        Idempotent via header/body `request_id`. Item yang sama (judul+type+requestId) akan di-skip.
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: header
+          name: request_id
+          schema: { type: string }
+          required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskCreateBulk' }
+            examples:
+              it_finance_standard:
+                value:
+                  requestId: "7b1b1f5d-0a6d-4c1a-9d45-90b8b0b4d2e0"
+                  request_id: "bulk-abc-001"
+                  items:
+                    - { type: "IT.CreateAccount", assignee_role: "IT", title: "Create SSO", priority: "High" }
+                    - { type: "IT.AssignLaptop", assignee_role: "IT", title: "Assign laptop" }
+                    - { type: "IT.GrantSystemAccess", assignee_role: "IT", title: "Grant access" }
+                    - { type: "FIN.AddToPayroll", assignee_role: "Finance", title: "Add to payroll" }
+                    - { type: "FIN.TaxForm", assignee_role: "Finance", title: "Collect tax form" }
+                    - { type: "FIN.BankVerification", assignee_role: "Finance", title: "Verify bank account" }
+      responses:
+        '207':
+          description: Multi-Status (created/skipped/failed)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeTasksBulkResult' }
+
+  /api/v1/onboarding-requests/{id}/tasks:generate:
+    post:
+      tags: [Onboarding Requests, Tasks]
+      summary: Auto-generate standard tasks for a request (IT/Finance/All)
+      description: >
+        Menghasilkan tugas standar sesuai template.
+        - Default.IT: IT.CreateAccount, IT.AssignLaptop, IT.GrantSystemAccess
+        - Default.FIN: FIN.AddToPayroll, FIN.TaxForm, FIN.BankVerification
+        - Default.ALL: IT + Finance
+        - Orientation.Setup: ORI.Schedule (opsional)
+        Idempotent berdasarkan kombinasi (template + requestId).
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+        - in: header
+          name: request_id
+          schema: { type: string }
+          required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/GenerateTasksRequest' }
+            examples:
+              all_default:
+                value:
+                  template: "Default.ALL"
+                  override_due_days: 3
+                  request_id: "gen-all-001"
+      responses:
+        '201':
+          description: Generated tasks (bulk result envelope)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeTasksBulkResult' }
+        '409':
+          description: Already generated (idempotent duplicate)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiEnvelope'
+              examples:
+                idempotent_duplicate:
+                  value:
+                    error: { code: "idempotent_duplicate", message: "email is already in use", field: "email" }
+                    message: "Failed"
+                    code: "40001"
+                    time_in: "2025-09-20T10:00:00Z"
+                    time_out: "2025-09-20T10:00:00Z"
+                    data: null
+                    trace_id: "b3a1e4c9f8"
+                    request_id: "req_9f2"
+
+
+  /api/v1/tasks/{id}:complete:
+    post:
+      tags: [Tasks]
+      summary: Mark task as Done (convenience)
+      description: >
+        Shortcut untuk mengubah status ke Done + optional checklist update.
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+        - in: header
+          name: request_id
+          schema: { type: string }
+          required: false
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note: { type: string, nullable: true }
+                checklist:
+                  type: array
+                  items: { $ref: '#/components/schemas/TaskChecklistItem' }
+      responses:
+        '200':
+          description: OK (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeTask' }
   /api/v1/tasks:
     get:
       tags: [Tasks]
       summary: List tasks
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [] } ]
       parameters:
-        - in: query; name: assignee; schema: { type: string, example: me }
-        - in: query; name: role; schema: { type: string, enum: [HR, Manager, IT, Finance, Orientation] }
-        - in: query; name: requestId; schema: { type: string, format: uuid }
-        - in: query; name: cursor; schema: { type: string }
-        - in: query; name: page_size; schema: { type: integer, default: 25 }
+        - in: query
+          name: assignee
+          schema: { type: string, example: me }
+        - in: query
+          name: role
+          schema: { type: string, enum: [HR, Manager, IT, Finance, Orientation] }
+        - in: query
+          name: requestId
+          schema: { type: string, format: uuid }
+        - in: query
+          name: employee_id
+          schema: { type: string, format: uuid }
+        - in: query
+          name: cursor
+          schema: { type: string }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 25 }
       responses:
         '200':
           description: Paged tasks (enveloped)
           content:
             application/json:
-              schema: { $ref: '#/components/x-enveloped/PaginatedTasks' }
-
-  /api/v1/tasks/{id}:
-    patch:
+              schema: { $ref: '#/components/schemas/EnvelopePaginatedTasks' }
+    post:
       tags: [Tasks]
-      summary: Update task
-      security: [{ bearerAuth: [] }]
+      summary: Create a task (single)
+      description: >
+        Membuat satu task. Gunakan header `request_id` untuk idempotency.
+        Contoh untuk IT/Finance:
+        - type: IT.CreateAccount / IT.AssignLaptop / IT.GrantSystemAccess
+        - type: FIN.AddToPayroll / FIN.TaxForm / FIN.BankVerification
+      security: [ { bearerAuth: [] } ]
       parameters:
-        - in: path; name: id; required: true; schema: { type: string, format: uuid }
+        - in: header
+          name: request_id
+          schema: { type: string }
+          required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TaskCreate' }
+            examples:
+              it_create_account:
+                value:
+                  employee_id: "2fd8c2d9-2b01-4bd8-9e0c-123456789abc"
+                  type: "IT.CreateAccount"
+                  assignee_role: "IT"
+                  title: "Create Google Workspace"
+                  description: "Provision email + add to Eng group"
+                  priority: "High"
+                  due_date: "2025-10-01T03:00:00Z"
+                  checklist:
+                    - { text: "Create email", done: false }
+                    - { text: "Add to SSO groups", done: false }
+      responses:
+        '201':
+          description: Created (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeTask' }
+
+
+  /api/v1/employees:
+    post:
+      tags: [Employees]
+      summary: Create employee (HRIS record)
+      description: >
+        Constraints:
+        - `primary_email` **unik** (409 jika duplikat).
+        - opsional kirim `employment.start_date`, `employment.type`, `contract_type`.
+      security: [ { bearerAuth: [] } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EmployeeCreate' }
+            examples:
+              default:
+                value:
+                  legal_full_name: "John Doe"
+                  primary_email: "john.doe@example.com"
+                  country: "ID"
+                  employment:
+                    position: "Backend Engineer"
+                    manager_name: "Jane Manager"
+                    type: "FullTime"
+                    contract_type: "Permanent"
+                    start_date: "2025-10-01"
+      responses:
+        '201':
+          description: Created (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeEmployee' }
+        '409':
+          description: Duplicate (email sudah ada)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiEnvelope' }
+
+    get:
+      tags: [Employees]
+      summary: List employees (filter & pagination)
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: query
+          name: q
+          schema: { type: string }
+          description: Cari by name/email/employee_code (full-text ringan)
+        - in: query
+          name: department
+          schema: { type: string }
+        - in: query
+          name: manager_name
+          schema: { type: string }
+        - in: query
+          name: cursor
+          schema: { type: string }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 25 }
+      responses:
+        '200':
+          description: Paged employees (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopePaginatedEmployees' }
+
+  /api/v1/employees/{id}:
+    get:
+      tags: [Employees]
+      summary: Get employee
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeEmployee' }
+        '404':
+          $ref: '#/components/responses/RecordNotFound'
+
+    patch:
+      tags: [Employees]
+      summary: Update employee
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EmployeeUpdate' }
+      responses:
+        '200':
+          description: Updated (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeEmployee' }
+
+  /api/v1/employees:match:
+    post:
+      tags: [Employees]
+      summary: Match/resolve employee (anti mismatch)
+      description: >
+        Coba resolve ke entitas Employee eksisting berdasarkan indikator email(unik). Jika match >1, kembalikan kandidat (disambiguasi di FE).
+      security: [ { bearerAuth: [] } ]
       requestBody:
         required: true
         content:
@@ -362,12 +1252,235 @@ paths:
             schema:
               type: object
               properties:
-                status: { $ref: '#/components/schemas/TaskStatus' }
-                note: { type: string }
+                primary_email: { type: string, format: email }
+                national_id: { type: string, nullable: true }
+                legal_full_name: { type: string, nullable: true }
+              anyOf:
+                - required: [primary_email]
+                - required: [national_id]
+            examples:
+              email_only: { value: { primary_email: "john.doe@example.com" } }
       responses:
         '200':
-          description: OK (enveloped)
+          description: Result (enveloped)
           content:
             application/json:
-              schema: { $ref: '#/components/x-enveloped/Task' }
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          match:
+                            type: string
+                            enum: [Unique, None, Multiple]
+                          employee:
+                            $ref: '#/components/schemas/Employee'
+                            nullable: true
+                          candidates:
+                            type: array
+                            items: { $ref: '#/components/schemas/Employee' }
+                            nullable: true
 
+  /api/v1/employees/{id}/payroll:
+    patch:
+      tags: [Employees]
+      summary: Update payroll info for an employee
+      description: >
+        Partial update payroll (currency/bank/tax). Envelope response.
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+        - in: header
+          name: request_id
+          schema: { type: string }
+          required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PayrollUpdate' }
+      responses:
+        '200':
+          description: Payroll updated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeEmployee' }
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+
+  /api/v1/employees/{id}/documents:
+    get:
+      tags: [Employees, Documents]
+      summary: List documents for an employee
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+        - in: query
+          name: cursor
+          schema: { type: string }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 25 }
+      responses:
+        '200':
+          description: Documents list
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopePaginatedEmployeeDocuments' }
+
+    post:
+      tags: [Employees, Documents]
+      summary: Upload a document for an employee
+      description: >
+        Multipart upload. Allowed `type`: ID, Tax, NDA, Contract, Other.
+        Backend should store and return a signed URL or CDN URL.
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+        - in: header
+          name: request_id
+          schema: { type: string }
+          required: false
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, type]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                type:
+                  type: string
+                  enum: [ID, Tax, NDA, Contract, Other]
+                note:
+                  type: string
+                  maxLength: 500
+            encoding:
+              note:
+                contentType: text/plain
+      responses:
+        '201':
+          description: Document uploaded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeEmployeeDocument' }
+        '400':
+          $ref: '#/components/responses/ValidationFailed'
+
+  /api/v1/employees/{id}/documents/{docId}:
+    delete:
+      tags: [Employees, Documents]
+      summary: Delete an employee document
+      description: Soft delete is recommended (audit retained).
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+        - in: path
+          name: docId
+          required: true
+          schema: { type: string, format: uuid }
+        - in: header
+          name: request_id
+          schema: { type: string }
+          required: false
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeEmpty' }
+        '404':
+          $ref: '#/components/responses/RecordNotFound'
+
+  /api/v1/audit-trails:
+    get:
+      tags: [Audit]
+      summary: Query audit history (paginated)
+      description: >
+        Filter berdasarkan entity/type/actor/action/waktu. Semua hasil dalam envelope.
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: query
+          name: entity_type
+          schema: { $ref: '#/components/schemas/AuditEntityType' }
+        - in: query
+          name: entity_id
+          schema: { type: string }
+        - in: query
+          name: actor_role
+          schema: { type: string, enum: [HR, Manager, IT, Finance, Orientation, System] }
+        - in: query
+          name: actor_name
+          schema: { type: string }
+        - in: query
+          name: action
+          schema: { type: string }
+        - in: query
+          name: date_from
+          schema: { type: string, format: date-time }
+        - in: query
+          name: date_to
+          schema: { type: string, format: date-time }
+        - in: query
+          name: cursor
+          schema: { type: string }
+        - in: query
+          name: page_size
+          schema: { type: integer, default: 50 }
+      responses:
+        '200':
+          description: Audit events
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopePaginatedAuditEvents' }
+
+  /api/v1/audit-trails/{id}:
+    get:
+      tags: [Audit]
+      summary: Get single audit event
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Audit event
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EnvelopeAuditEvent' }
+        '404':
+          $ref: '#/components/responses/RecordNotFound'
+
+          
+  ############################################################
+  # ================= Notes Implementasi Kritis ============ #
+  ############################################################
+  # - Pastikan setiap OnboardingRequest yang sukses di-Submit/Approve
+  #   memiliki link ke Employee (employee_id). Jika belum ada:
+  #     1) panggil /employees:match → jika Unique → pakai id tsb,
+  #     2) jika None → FE bisa tawarkan create di /employees,
+  #     3) jika Multiple → FE pakai daftar candidates untuk memilih.
+  # - Uniqueness: primary_email unik pada Employee. OnboardingRequest.email
+  #   sebaiknya disamakan dengan Employee.primary_email (validasi konsistensi).
+  # - Denormalisasi aman: OnboardingRequest menyimpan employee_name/email snapshot
+  #   untuk audit & histori, tapi tetap gunakan employee_id untuk relasi utama.
