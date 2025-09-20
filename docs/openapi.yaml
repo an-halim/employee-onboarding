@@ -1,0 +1,373 @@
+openapi: 3.0.3
+info:
+  title: Employee Onboarding API
+  version: 1.0.1
+  description: >
+    Semua respons mengikuti common envelope: {error, message, code, time_in, time_out, data, trace_id, request_id}.
+servers:
+  - url: https://api.company.com
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+
+  # ========= Common Response Envelope =========
+  schemas:
+    ApiError:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string, example: validation_failed }
+        message: { type: string, example: "email is already in use" }
+        field: { type: string, nullable: true, example: email }
+        details:
+          type: object
+          additionalProperties: true
+          nullable: true
+    ApiEnvelope:
+      type: object
+      required: [message, code, time_in, time_out, data, trace_id, request_id]
+      properties:
+        error:
+          oneOf:
+            - $ref: '#/components/schemas/ApiError'
+            - type: "null"
+          nullable: true
+          example: null
+        message: { type: string, example: Success }
+        code: { type: string, description: "Business/result code", example: "345" }
+        time_in: { type: string, format: date-time }
+        time_out: { type: string, format: date-time }
+        data:
+          description: "Payload sebenarnya (object/array/pagination)"
+          nullable: true
+        trace_id: { type: string, example: "b3a1e4c9f8..." }
+        request_id: { type: string, example: "req_9f2..." }
+
+    # ==== Domain Schemas (ringkas; sama seperti sebelumnya) ====
+    OnboardingStatus:
+      type: string
+      enum: [Draft, PendingApproval, ChangesRequested, InITFinance, Orientation, Completed, Canceled]
+    OnboardingRequest:
+      type: object
+      required: [id, status, employeeName, email, position, manager, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        status: { $ref: '#/components/schemas/OnboardingStatus' }
+        employeeName: { type: string }
+        email: { type: string, format: email }
+        position: { type: string }
+        department: { type: string, nullable: true }
+        startDate: { type: string, format: date, nullable: true }
+        manager: { type: string }
+        notes: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    OnboardingRequestCreate:
+      type: object
+      required: [employeeName, email, position, manager]
+      properties:
+        employeeName: { type: string }
+        email: { type: string, format: email }
+        position: { type: string }
+        department: { type: string, nullable: true }
+        startDate: { type: string, format: date, nullable: true }
+        manager: { type: string }
+        notes: { type: string, nullable: true, maxLength: 2000 }
+    OnboardingRequestDetail:
+      allOf:
+        - $ref: '#/components/schemas/OnboardingRequest'
+        - type: object
+          properties:
+            tasks:
+              type: array
+              items:
+                $ref: '#/components/schemas/Task'
+            orientation:
+              type: object
+              properties:
+                scheduledAt: { type: string, format: date-time, nullable: true }
+                done: { type: boolean, default: false }
+    TaskType:
+      type: string
+      enum: [IT.CreateAccount, IT.AssignLaptop, IT.GrantSystemAccess, FIN.AddToPayroll, FIN.TaxForm, FIN.BankVerification, ORI.Schedule, ORI.Orientation]
+    TaskStatus: { type: string, enum: [Open, InProgress, Done, Blocked] }
+    Task:
+      type: object
+      required: [id, requestId, type, status]
+      properties:
+        id: { type: string, format: uuid }
+        requestId: { type: string, format: uuid }
+        type: { $ref: '#/components/schemas/TaskType' }
+        status: { $ref: '#/components/schemas/TaskStatus' }
+        assigneeRole: { type: string, enum: [HR, Manager, IT, Finance, Orientation] }
+        note: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    PaginatedOnboardingRequests:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/OnboardingRequest' }
+        nextCursor: { type: string, nullable: true }
+        pageSize: { type: integer, example: 25 }
+    PaginatedTasks:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Task' }
+        nextCursor: { type: string, nullable: true }
+        pageSize: { type: integer, example: 25 }
+
+  # ==== Reusable "Envelope<SpecificSchema>" via allOf ====
+  # Pakai ini di responses: schema: { allOf: [ { $ref: '#/components/schemas/ApiEnvelope' }, { type: object, properties: { data: { $ref: '...' } } } ] }
+  x-enveloped:
+    OnboardingRequest:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/OnboardingRequest'
+    OnboardingRequestDetail:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/OnboardingRequestDetail'
+    PaginatedOnboardingRequests:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PaginatedOnboardingRequests'
+    Task:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data: { $ref: '#/components/schemas/Task' }
+    PaginatedTasks:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data: { $ref: '#/components/schemas/PaginatedTasks' }
+    Empty:
+      allOf:
+        - $ref: '#/components/schemas/ApiEnvelope'
+        - type: object
+          properties:
+            data: { type: "null", nullable: true }
+
+paths:
+  /api/v1/onboarding-requests:
+    post:
+      tags: [Onboarding Requests]
+      summary: Create a new onboarding request (draft)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: header
+          name: Idempotency-Key
+          schema: { type: string }
+          required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OnboardingRequestCreate' }
+      responses:
+        '201':
+          description: Draft created (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/x-enveloped/OnboardingRequest' }
+              examples:
+                success:
+                  value:
+                    error: null
+                    message: "Success"
+                    code: "20100"
+                    time_in: "2025-09-20T10:00:00Z"
+                    time_out: "2025-09-20T10:00:01Z"
+                    data:
+                      id: "7b1b1f5d-0a6d-4c1a-9d45-90b8b0b4d2e0"
+                      status: "Draft"
+                      employeeName: "John Doe"
+                      email: "john.doe@example.com"
+                      position: "Backend Engineer"
+                      manager: "Jane Manager"
+                      createdAt: "2025-09-20T10:00:00Z"
+                      updatedAt: "2025-09-20T10:00:00Z"
+                    trace_id: "b3a1e4c9f8"
+                    request_id: "req_9f2"
+        '400':
+          description: Validation error (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ApiEnvelope' }
+              examples:
+                validation_failed:
+                  value:
+                    error: { code: "validation_failed", message: "email is already in use", field: "email" }
+                    message: "Failed"
+                    code: "40001"
+                    time_in: "2025-09-20T10:00:00Z"
+                    time_out: "2025-09-20T10:00:00Z"
+                    data: null
+                    trace_id: "b3a1e4c9f8"
+                    request_id: "req_9f2"
+    get:
+      tags: [Onboarding Requests]
+      summary: List requests (filterable)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: query; name: status; schema: { type: string }
+        - in: query; name: department; schema: { type: string }
+        - in: query; name: date_from; schema: { type: string, format: date }
+        - in: query; name: date_to; schema: { type: string, format: date }
+        - in: query; name: cursor; schema: { type: string }
+        - in: query; name: page_size; schema: { type: integer, default: 25 }
+      responses:
+        '200':
+          description: Paged list (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/x-enveloped/PaginatedOnboardingRequests' }
+              examples:
+                page:
+                  value:
+                    error: null
+                    message: "Success"
+                    code: "20000"
+                    time_in: "2025-09-20T10:05:00Z"
+                    time_out: "2025-09-20T10:05:00Z"
+                    data:
+                      items:
+                        - { id: "1", status: "PendingApproval", employeeName: "A", email: "a@x.com", position: "FE", manager: "M", createdAt: "2025-09-18T01:00:00Z", updatedAt: "2025-09-18T01:00:00Z" }
+                        - { id: "2", status: "InITFinance", employeeName: "B", email: "b@x.com", position: "BE", manager: "M", createdAt: "2025-09-19T01:00:00Z", updatedAt: "2025-09-19T01:30:00Z" }
+                      nextCursor: "eyJpZCI6IjIifQ=="
+                      pageSize: 25
+                    trace_id: "b3a1e4c9f8"
+                    request_id: "req_9f2"
+
+  /api/v1/onboarding-requests/{id}:
+    get:
+      tags: [Onboarding Requests]
+      summary: Get request detail & tasks
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Detail (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/x-enveloped/OnboardingRequestDetail' }
+    patch:
+      tags: [Onboarding Requests]
+      summary: Update fields (pre-approval)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OnboardingRequestCreate' }
+      responses:
+        '200':
+          description: Updated (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/x-enveloped/OnboardingRequest' }
+
+  /api/v1/onboarding-requests/{id}/submit:
+    post:
+      tags: [Onboarding Requests]
+      summary: Submit draft → PendingApproval
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path; name: id; required: true; schema: { type: string, format: uuid }
+        - in: header; name: Idempotency-Key; schema: { type: string }
+      responses:
+        '200':
+          description: OK (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/x-enveloped/OnboardingRequest' }
+
+  /api/v1/onboarding-requests/{id}/approve:
+    post:
+      tags: [Onboarding Requests]
+      summary: Manager approval → InITFinance
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path; name: id; required: true; schema: { type: string, format: uuid }
+        - in: header; name: Idempotency-Key; schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: { comment: { type: string, maxLength: 500 } }
+      responses:
+        '200':
+          description: OK (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/x-enveloped/OnboardingRequestDetail' }
+
+  /api/v1/tasks:
+    get:
+      tags: [Tasks]
+      summary: List tasks
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: query; name: assignee; schema: { type: string, example: me }
+        - in: query; name: role; schema: { type: string, enum: [HR, Manager, IT, Finance, Orientation] }
+        - in: query; name: requestId; schema: { type: string, format: uuid }
+        - in: query; name: cursor; schema: { type: string }
+        - in: query; name: page_size; schema: { type: integer, default: 25 }
+      responses:
+        '200':
+          description: Paged tasks (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/x-enveloped/PaginatedTasks' }
+
+  /api/v1/tasks/{id}:
+    patch:
+      tags: [Tasks]
+      summary: Update task
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path; name: id; required: true; schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { $ref: '#/components/schemas/TaskStatus' }
+                note: { type: string }
+      responses:
+        '200':
+          description: OK (enveloped)
+          content:
+            application/json:
+              schema: { $ref: '#/components/x-enveloped/Task' }
+
