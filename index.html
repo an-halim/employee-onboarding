@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Employee Onboarding – Fixed Parallel & Progress</title>
+		<title>
+			Employee Onboarding – Interactive Mockup (Vanilla, Parallel Fix v2)
+		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<style>
 			:root {
 				--bg: #f4f6f9;
-				--card: #fff;
+				--card: #ffffff;
 				--ink: #243046;
 				--muted: #6b7280;
 				--blue: #0a66c2;
@@ -26,10 +28,10 @@
 				color: var(--ink);
 				font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Arial;
 			}
-			header {
+			header[role="banner"] {
 				position: sticky;
 				top: 0;
-				z-index: 10;
+				z-index: 20;
 				background: linear-gradient(90deg, #01315f, #00509a);
 				color: #fff;
 				display: flex;
@@ -44,7 +46,7 @@
 				align-items: center;
 				gap: 8px;
 			}
-			.chip {
+			.status-chip {
 				display: inline-flex;
 				align-items: center;
 				gap: 6px;
@@ -52,6 +54,20 @@
 				border-radius: 999px;
 				padding: 6px 10px;
 				font-weight: 600;
+				position: relative;
+			}
+			.status-chip[data-tooltip]:hover::after {
+				content: attr(data-tooltip);
+				position: absolute;
+				left: 0;
+				top: 100%;
+				margin-top: 6px;
+				background: #111827;
+				color: #fff;
+				padding: 6px 8px;
+				border-radius: 6px;
+				white-space: nowrap;
+				font-size: 12px;
 			}
 			main {
 				display: grid;
@@ -103,16 +119,16 @@
 				box-shadow: 0 0 0 3px rgba(43, 138, 239, 0.2);
 				border-color: var(--blue);
 			}
-			.grid {
+			.form-grid {
 				display: grid;
 				grid-template-columns: 1fr 1fr;
 				gap: 10px;
 			}
-			.grid .full {
+			.form-grid .full {
 				grid-column: 1 / -1;
 			}
 			@media (max-width: 640px) {
-				.grid {
+				.form-grid {
 					grid-template-columns: 1fr;
 				}
 			}
@@ -157,7 +173,10 @@
 				gap: 8px;
 				flex-wrap: wrap;
 				margin-top: 8px;
+				justify-content: flex-start;
 			}
+
+			/* Board */
 			.board {
 				display: grid;
 				grid-template-columns: repeat(5, minmax(160px, 1fr));
@@ -188,7 +207,7 @@
 				font-size: 14px;
 				color: #0c2b50;
 			}
-			.card-mini {
+			.onboard-card {
 				background: #fff;
 				border: 1px solid var(--border);
 				border-radius: 10px;
@@ -227,6 +246,7 @@
 				border-color: #cfe7ff;
 				color: #0d5fb8;
 			}
+
 			.check {
 				display: flex;
 				align-items: center;
@@ -262,6 +282,54 @@
 				min-width: 34px;
 				text-align: center;
 			}
+
+			/* Modal */
+			.modal-backdrop {
+				position: fixed;
+				inset: 0;
+				z-index: 50;
+				background: rgba(0, 0, 0, 0.35);
+				display: none;
+				pointer-events: none;
+			}
+			.modal {
+				background: #fff;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 60;
+				border-radius: 12px;
+				min-width: 280px;
+				max-width: 520px;
+				width: 92%;
+				border: 1px solid var(--border);
+				box-shadow: 0 20px 60px rgba(2, 8, 23, 0.2);
+			}
+			.modal-backdrop[aria-hidden="false"] {
+				display: block;
+				pointer-events: auto;
+			}
+			.modal header {
+				background: #f4f7fb;
+				color: #0c2b50;
+				padding: 12px 16px;
+				border-radius: 12px 12px 0 0;
+			}
+			.modal .body {
+				padding: 16px;
+			}
+			.modal .footer {
+				display: flex;
+				gap: 8px;
+				justify-content: flex-end;
+				padding: 12px 16px;
+				border-top: 1px solid var(--border);
+			}
+
+			details {
+				margin-top: 10px;
+			}
 			pre.audit {
 				background: #0f172a;
 				color: #e5e7eb;
@@ -271,73 +339,93 @@
 				max-height: 220px;
 				font-size: 12px;
 			}
-			footer {
+			footer[role="contentinfo"] {
 				padding: 12px;
 				text-align: center;
 				background: #fff;
 				border-top: 1px solid var(--border);
 			}
-			/* Tooltip sederhana */
-			[data-tip] {
-				position: relative;
-			}
-			[data-tip]:hover::after {
-				content: attr(data-tip);
-				position: absolute;
-				left: 0;
-				top: 100%;
-				margin-top: 6px;
-				background: #111827;
-				color: #fff;
-				padding: 6px 8px;
-				border-radius: 6px;
-				white-space: nowrap;
-				font-size: 12px;
-			}
 		</style>
 	</head>
 	<body>
-		<header aria-label="Header">
+		<header role="banner" aria-label="Header">
 			<h1 tabindex="0">💼 Employee Onboarding</h1>
-			<div id="statusChip" class="chip" aria-live="polite" role="status">
+			<div
+				id="statusChip"
+				class="status-chip"
+				data-tooltip="Status keseluruhan"
+				aria-live="polite"
+				aria-atomic="true"
+				role="status"
+			>
 				<span id="statusText">Draft</span>
 			</div>
 		</header>
 
 		<main role="main">
-			<!-- HR -->
+			<!-- HR Form -->
 			<section class="card" aria-label="HR Create Request">
 				<h2 id="hr-title">HR – Create Request</h2>
 				<form id="hrForm" aria-labelledby="hr-title">
-					<div class="grid">
+					<div class="form-grid">
 						<div class="full">
 							<label for="empName">Employee Name</label>
-							<input id="empName" value="John Doe" required />
+							<input
+								id="empName"
+								name="empName"
+								aria-label="Employee Name"
+								value="John Doe"
+								required
+							/>
 						</div>
 						<div class="full">
 							<label for="empEmail">Email</label>
 							<input
 								id="empEmail"
+								name="empEmail"
 								type="email"
+								aria-label="Email"
 								value="john.doe@example.com"
 								required
 							/>
 						</div>
 						<div>
 							<label for="empPos">Position</label>
-							<input id="empPos" value="Backend Engineer" />
+							<input
+								id="empPos"
+								name="empPos"
+								aria-label="Position"
+								value="Backend Engineer"
+							/>
 						</div>
 						<div>
 							<label for="empDate">Start Date</label>
-							<input id="empDate" type="date" />
+							<input
+								id="empDate"
+								name="empDate"
+								type="date"
+								aria-label="Start Date"
+							/>
 						</div>
 						<div>
 							<label for="empMgr">Manager</label>
-							<input id="empMgr" value="Jane Manager" />
+							<input
+								id="empMgr"
+								name="empMgr"
+								aria-label="Manager"
+								value="Jane Manager"
+							/>
 						</div>
 						<div class="full">
 							<label for="empNotes">Notes</label>
-							<textarea id="empNotes" rows="3">Needs laptop & VPN</textarea>
+							<textarea
+								id="empNotes"
+								name="empNotes"
+								rows="3"
+								aria-label="Notes"
+							>
+Needs laptop & VPN</textarea
+							>
 						</div>
 					</div>
 					<div class="actions" role="group" aria-label="Form actions">
@@ -345,39 +433,58 @@
 							type="button"
 							class="btn primary"
 							id="btnSubmit"
+							aria-label="Submit Onboarding"
 							title="Submit (idempotent)"
 						>
 							Submit
 						</button>
-						<button type="button" class="btn secondary" id="btnDraft">
+						<button
+							type="button"
+							class="btn secondary"
+							id="btnDraft"
+							aria-label="Save Draft"
+						>
 							Save Draft
 						</button>
 					</div>
 				</form>
+				<details style="margin-top: 8px">
+					<summary>Tips</summary>
+					<div class="meta">
+						Submit idempotent: menekan berulang tidak akan buat transisi
+						duplikat; requestId tetap sama.
+					</div>
+				</details>
 			</section>
 
 			<!-- Board -->
 			<section class="card" aria-label="Swimlane Board">
 				<h2>Process Board (BPMN)</h2>
-				<div class="board">
-					<div class="lane">
-						<h3>HR 👩‍💼</h3>
+				<div class="board" role="list" aria-label="Swimlanes">
+					<div class="lane" role="region" aria-labelledby="laneHRLabel">
+						<h3 id="laneHRLabel">HR 👩‍💼</h3>
 						<div id="lane-hr"></div>
 					</div>
-					<div class="lane">
-						<h3>Manager 👨‍💼</h3>
+					<div class="lane" role="region" aria-labelledby="laneMgrLabel">
+						<h3 id="laneMgrLabel">Manager 👨‍💼</h3>
 						<div id="lane-manager"></div>
 					</div>
-					<div class="lane">
-						<h3>IT 🖥️ <span class="badge par">Parallel</span></h3>
+					<div class="lane" role="region" aria-labelledby="laneITLabel">
+						<h3 id="laneITLabel">
+							IT 🖥️
+							<span class="badge par" aria-label="Parallel">Parallel</span>
+						</h3>
 						<div id="lane-it"></div>
 					</div>
-					<div class="lane">
-						<h3>Finance 💳 <span class="badge par">Parallel</span></h3>
+					<div class="lane" role="region" aria-labelledby="laneFinLabel">
+						<h3 id="laneFinLabel">
+							Finance 💳
+							<span class="badge par" aria-label="Parallel">Parallel</span>
+						</h3>
 						<div id="lane-finance"></div>
 					</div>
-					<div class="lane">
-						<h3>Orientation 🎓</h3>
+					<div class="lane" role="region" aria-labelledby="laneOriLabel">
+						<h3 id="laneOriLabel">Orientation 🎓</h3>
 						<div id="lane-orientation"></div>
 					</div>
 				</div>
@@ -387,6 +494,16 @@
 					</div>
 					<div class="meta" id="laneProgressText">0/6 tasks completed</div>
 				</div>
+				<div class="actions">
+					<button
+						id="btnProceed"
+						class="btn warn"
+						style="display: none"
+						aria-label="Proceed to Orientation"
+					>
+						Proceed to Orientation
+					</button>
+				</div>
 			</section>
 		</main>
 
@@ -395,25 +512,77 @@
 				<h2>Audit Trail</h2>
 				<details open>
 					<summary>Events (JSON)</summary>
-					<pre id="audit" class="audit"></pre>
+					<pre
+						id="audit"
+						class="audit"
+						tabindex="0"
+						aria-label="Audit events"
+					></pre>
 				</details>
 			</section>
 		</main>
 
-		<footer>
-			<button id="btnReset" class="btn secondary">Reset Demo Data</button>
+		<footer role="contentinfo">
+			<button id="btnReset" class="btn secondary" aria-label="Reset Demo Data">
+				Reset Demo Data
+			</button>
 		</footer>
+
+		<!-- Modal: Request Changes -->
+		<div
+			id="modalWrap"
+			class="modal-backdrop"
+			aria-hidden="true"
+			aria-label="Modal Backdrop"
+		></div>
+		<div
+			id="modal"
+			class="modal"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="modalTitle"
+			aria-describedby="modalDesc"
+			hidden
+		>
+			<header><strong id="modalTitle">Request Changes</strong></header>
+			<div class="body">
+				<p id="modalDesc" class="meta">Berikan alasan perubahan untuk HR:</p>
+				<label for="changeReason">Reason</label>
+				<textarea
+					id="changeReason"
+					rows="3"
+					aria-label="Change reason"
+				></textarea>
+			</div>
+			<div class="footer">
+				<button
+					class="btn secondary"
+					id="modalCancel"
+					aria-label="Cancel request changes"
+				>
+					Cancel (Esc)
+				</button>
+				<button
+					class="btn primary"
+					id="modalOk"
+					aria-label="Confirm request changes"
+				>
+					Submit
+				</button>
+			</div>
+		</div>
 
 		<script>
 			/* ===== Helpers & Persistence ===== */
-			const LS_STATE = "onboarding.state.fx",
-				LS_AUDIT = "onboarding.audit.fx";
+			const LS_STATE = "onboarding.state.v1",
+				LS_AUDIT = "onboarding.audit.v1";
 			const $ = (s, r = document) => r.querySelector(s);
 			const el = (t, a = {}) => Object.assign(document.createElement(t), a);
 			const nowISO = () => new Date().toISOString();
 			const genId = () =>
-				crypto?.randomUUID?.() ||
-				"req_" + Math.random().toString(16).slice(2) + Date.now();
+				crypto && crypto.randomUUID
+					? crypto.randomUUID()
+					: "req_" + Math.random().toString(16).slice(2) + Date.now();
 			const saveLS = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 			const loadLS = (k, d = null) => {
 				try {
@@ -443,20 +612,26 @@
 			});
 			let audit = loadLS(LS_AUDIT, []);
 
+			/* ===== Persistence & Audit ===== */
 			const save = () => saveLS(LS_STATE, state);
 			function logEvent(actor, action, payload = {}) {
 				audit.push({ time: nowISO(), actor, action, payload });
 				saveLS(LS_AUDIT, audit);
+				renderAudit();
+			}
+			function renderAudit() {
 				$("#audit").textContent = JSON.stringify(audit, null, 2);
 			}
 			function setStatus(s, tip) {
 				state.status = s;
 				$("#statusText").textContent = s;
-				$("#statusChip").setAttribute("data-tip", tip || "");
+				const chip = $("#statusChip");
+				chip.dataset.tooltip = tip || "Status keseluruhan";
+				chip.setAttribute("aria-label", "Status: " + s);
 				save();
 			}
 
-			/* ===== Progress ===== */
+			/* ===== Progress (ring + text) ===== */
 			function progressCounts() {
 				const total = 6;
 				const done = [...state.it.tasks, ...state.finance.tasks].filter(
@@ -468,53 +643,18 @@
 					pct: Math.max(0, Math.min(100, Math.round((done / total) * 100))),
 				};
 			}
-			function renderProgress() {
+			function renderRing() {
 				const { done, total, pct } = progressCounts();
-				$("#ring").style.setProperty("--pct", String(pct)); // <-- set var as string
+				$("#ring").style.setProperty("--pct", pct);
 				$("#ringText").textContent = pct + "%";
 				$("#laneProgressText").textContent = `${done}/${total} tasks completed`;
 			}
 
 			/* ===== Guards ===== */
-			const laneAll = (lane) => state[lane].tasks.every(Boolean);
-			const parallelComplete = () =>
-				(state.it.done || laneAll("it")) &&
-				(state.finance.done || laneAll("finance"));
-
-			/* ===== Central Evaluator ===== */
-			function evaluateState(source = "eval") {
-				renderProgress();
-
-				// Enable/disable lane approve buttons if exist
-				const itBtn = $("#btnITDone");
-				if (itBtn) itBtn.disabled = !laneAll("it") || state.it.done;
-				const fiBtn = $("#btnFINDone");
-				if (fiBtn) fiBtn.disabled = !laneAll("finance") || state.finance.done;
-
-				// Auto-advance from Parallel to Orientation regardless of minor drift
-				if (
-					["In IT/Finance", "Orientation"].includes(state.status) &&
-					parallelComplete()
-				) {
-					if (state.status !== "Orientation") {
-						setStatus(
-							"Orientation",
-							"Parallel complete → schedule orientation"
-						);
-						logEvent("System", "Advance to Orientation", { trigger: source });
-						renderBoard(); // re-render to show Orientation controls
-						return; // stop further evaluation (fresh DOM)
-					}
-				}
-
-				// Enable Orientation action buttons dynamically
-				const schedule = $("#btnSchedule"),
-					done = $("#btnDone");
-				const enabled = parallelComplete();
-				if (schedule) schedule.disabled = !enabled;
-				if (done) done.disabled = !(enabled && state.orientation.scheduledAt);
-				save();
-			}
+			const laneAllChecked = (lane) => state[lane].tasks.every(Boolean);
+			const bothLanesDone = () =>
+				(state.it.done || laneAllChecked("it")) &&
+				(state.finance.done || laneAllChecked("finance"));
 
 			/* ===== Board Rendering ===== */
 			function clearLanes() {
@@ -522,9 +662,10 @@
 					(k) => ($("#lane-" + k).innerHTML = "")
 				);
 			}
-			function card(title, meta = [], actions = []) {
-				const c = el("div", { className: "card-mini", tabIndex: 0 });
-				c.append(
+
+			function cardTemplate(title, meta = [], actions = []) {
+				const box = el("div", { className: "onboard-card", tabIndex: 0 });
+				box.append(
 					el("div", {
 						textContent: title,
 						style: "font-weight:700;margin-bottom:6px",
@@ -537,60 +678,80 @@
 							el("span", {
 								className: "badge " + (x.kind || ""),
 								textContent: x.text,
+								title: x.tip || "",
 							})
 						)
 					);
-					c.append(m);
+					box.append(m);
 				}
 				if (actions.length) {
-					const a = el("div", { className: "actions" });
-					actions.forEach((ac) => {
+					const act = el("div", { className: "actions" });
+					actions.forEach((a) => {
 						const b = el("button", {
-							className: "btn " + (ac.kind || "secondary"),
-							textContent: ac.label,
-							type: "button",
-							id: ac.id,
-							disabled: !!ac.disabled,
-							title: ac.title || ac.label,
+							className: "btn " + (a.kind || "secondary"),
+							textContent: a.label,
+							id: a.id,
+							ariaLabel: a.aria || a.label,
+							title: a.title || a.label,
 						});
-						a.append(b);
+						if (a.disabled) b.disabled = true;
+						act.append(b);
 					});
-					c.append(a);
+					box.append(act);
 				}
-				return c;
+				return box;
 			}
+
 			function renderBoard() {
 				clearLanes();
-				renderProgress();
+				renderRing();
 
-				const metaBase = [
+				const baseMeta = [
 					{ text: state.card.name },
 					{ text: state.card.position || "—" },
-					{ text: (state.card.startDate || "").slice(0, 10) },
+					{ text: (state.card.startDate || "").toString().slice(0, 10) },
 				];
 
 				if (state.status === "Draft" || state.status === "Changes Requested") {
-					$("#lane-hr").append(card("Draft Request", metaBase));
+					const note = state.manager.changeReason
+						? [
+								{
+									text: "Change: " + state.manager.changeReason,
+									kind: "warn",
+									tip: "Requested by Manager",
+								},
+						  ]
+						: [];
+					$("#lane-hr").append(
+						cardTemplate("Draft Request", [...baseMeta, ...note], [])
+					);
 				}
 
 				if (state.status === "Pending Approval") {
-					$("#lane-manager").append(
-						card(
-							"Pending Approval",
-							[...metaBase, { text: "Gateway", kind: "warn" }],
-							[
-								{ id: "btnApprove", label: "Approve", kind: "primary" },
-								{ id: "btnReqChange", label: "Request Changes" },
-							]
-						)
+					const c = cardTemplate(
+						"Pending Approval",
+						[
+							...baseMeta,
+							{ text: "Gateway", kind: "warn", tip: "Approve/Request changes" },
+						],
+						[
+							{ id: "btnApprove", label: "Approve", kind: "primary" },
+							{
+								id: "btnReqChange",
+								label: "Request Changes",
+								kind: "secondary",
+								title: "Request changes with reason",
+							},
+						]
 					);
+					$("#lane-manager").append(c);
 				}
 
 				if (
 					["In IT/Finance", "Orientation", "Completed"].includes(state.status)
 				) {
 					// IT
-					const it = el("div", { className: "card-mini" });
+					const it = el("div", { className: "onboard-card" });
 					it.append(
 						el("div", {
 							textContent: "IT Checklist",
@@ -600,15 +761,15 @@
 					["Create account", "Assign laptop", "Grant system access"].forEach(
 						(t, i) => {
 							const row = el("label", { className: "check" });
-							row.append(
-								el("input", {
-									type: "checkbox",
-									"data-area": "it",
-									"data-idx": i,
-									checked: state.it.tasks[i],
-								}),
-								el("span", { textContent: t })
-							);
+							const cb = el("input", {
+								type: "checkbox",
+								checked: state.it.tasks[i],
+								"data-area": "it",
+								"data-idx": i,
+								ariaLabel: `IT Task ${i + 1}: ${t}`,
+								tabIndex: 0,
+							});
+							row.append(cb, el("span", { textContent: t }));
 							it.append(row);
 						}
 					);
@@ -617,21 +778,20 @@
 						itMeta.append(
 							el("span", { className: "badge ok", textContent: "IT Approved" })
 						);
-					const itAct = el("div", { className: "actions" });
-					itAct.append(
-						el("button", {
-							className: "btn success",
-							id: "btnITDone",
-							textContent: state.it.done ? "IT Done ✓" : "Approve IT",
-							disabled: !laneAll("it") || state.it.done,
-							type: "button",
-						})
-					);
-					it.append(itMeta, itAct);
+					const itActions = el("div", { className: "actions" });
+					const itApprove = el("button", {
+						className: "btn success",
+						id: "btnITDone",
+						textContent: state.it.done ? "IT Done ✓" : "Approve IT",
+						disabled: !laneAllChecked("it") || state.it.done,
+						title: "Mark IT lane completed",
+					});
+					itActions.append(itApprove);
+					it.append(itMeta, itActions);
 					$("#lane-it").append(it);
 
 					// Finance
-					const fi = el("div", { className: "card-mini" });
+					const fi = el("div", { className: "onboard-card" });
 					fi.append(
 						el("div", {
 							textContent: "Finance Checklist",
@@ -641,15 +801,15 @@
 					["Add to payroll", "Tax form", "Bank account verification"].forEach(
 						(t, i) => {
 							const row = el("label", { className: "check" });
-							row.append(
-								el("input", {
-									type: "checkbox",
-									"data-area": "finance",
-									"data-idx": i,
-									checked: state.finance.tasks[i],
-								}),
-								el("span", { textContent: t })
-							);
+							const cb = el("input", {
+								type: "checkbox",
+								checked: state.finance.tasks[i],
+								"data-area": "finance",
+								"data-idx": i,
+								ariaLabel: `Finance Task ${i + 1}: ${t}`,
+								tabIndex: 0,
+							});
+							row.append(cb, el("span", { textContent: t }));
 							fi.append(row);
 						}
 					);
@@ -661,182 +821,279 @@
 								textContent: "Finance Approved",
 							})
 						);
-					const fiAct = el("div", { className: "actions" });
-					fiAct.append(
-						el("button", {
-							className: "btn success",
-							id: "btnFINDone",
-							textContent: state.finance.done
-								? "Finance Done ✓"
-								: "Approve Finance",
-							disabled: !laneAll("finance") || state.finance.done,
-							type: "button",
-						})
-					);
-					fi.append(fiMeta, fiAct);
+					const fiActions = el("div", { className: "actions" });
+					const fiApprove = el("button", {
+						className: "btn success",
+						id: "btnFINDone",
+						textContent: state.finance.done
+							? "Finance Done ✓"
+							: "Approve Finance",
+						disabled: !laneAllChecked("finance") || state.finance.done,
+						title: "Mark Finance lane completed",
+					});
+					fiActions.append(fiApprove);
+					fi.append(fiMeta, fiActions);
 					$("#lane-finance").append(fi);
 				}
 
 				if (["Orientation", "Completed"].includes(state.status)) {
-					const enabled = parallelComplete();
-					const box = card("Orientation", [
+					const enabled = bothLanesDone();
+					const meta = [
 						{
 							text: enabled ? "Enabled" : "Waiting Parallel",
 							kind: enabled ? "ok" : "warn",
 						},
-					]);
+					];
+					const box = cardTemplate("Orientation", meta, []);
+					const wrap = el("div");
+					const r1 = el("div", { className: "form-grid" });
 					const dt = el("input", {
 						type: "datetime-local",
 						id: "oriDT",
 						value: state.orientation.scheduledAt || "",
+						ariaLabel: "Orientation schedule",
+						title: "Set orientation date/time",
+						className: "full",
 					});
+					r1.append(dt);
+					wrap.append(r1);
 					const btns = el("div", { className: "actions" });
-					btns.append(
-						el("button", {
-							className: "btn secondary",
-							id: "btnSchedule",
-							textContent: "Schedule Orientation",
-							disabled: !enabled,
-							type: "button",
-						})
-					);
-					btns.append(
-						el("button", {
-							className: "btn primary",
-							id: "btnDone",
-							textContent: "Mark as Done",
-							disabled: !(enabled && state.orientation.scheduledAt),
-							type: "button",
-						})
-					);
-					box.append(dt, btns);
+					const schedule = el("button", {
+						className: "btn secondary",
+						id: "btnSchedule",
+						textContent: "Schedule Orientation",
+						disabled: !enabled,
+						title: "Set date/time",
+					});
+					const done = el("button", {
+						className: "btn primary",
+						id: "btnDone",
+						textContent: "Mark as Done",
+						disabled: !(enabled && state.orientation.scheduledAt),
+					});
+					btns.append(schedule, done);
+					wrap.append(btns);
+					box.append(wrap);
 					$("#lane-orientation").append(box);
 				}
 
 				if (state.status === "Completed") {
 					$("#lane-orientation").append(
-						card("Onboarding Completed", [{ text: "Completed", kind: "ok" }])
+						cardTemplate(
+							"Onboarding Completed",
+							[{ text: "Completed", kind: "ok" }],
+							[]
+						)
 					);
 				}
 
-				// pastikan tombol/indikator mengikuti kondisi terakhir
-				evaluateState("renderBoard");
+				// Proceed button visibility
+				$("#btnProceed").style.display =
+					state.status === "In IT/Finance" && bothLanesDone()
+						? "inline-flex"
+						: "none";
 			}
 
-			/* ===== Event Delegation (aman saat re-render) ===== */
+			/* ===== Event Delegation (robust across re-renders) ===== */
 			document.addEventListener("change", (e) => {
 				const t = e.target;
-				if (t.matches('input[type="checkbox"][data-area]')) {
-					const area = t.getAttribute("data-area"),
-						idx = +t.getAttribute("data-idx");
+				// Checklist toggles
+				if (t && t.matches('input[type="checkbox"][data-area]')) {
+					const area = t.getAttribute("data-area");
+					const idx = +t.getAttribute("data-idx");
 					state[area].tasks[idx] = t.checked;
 					logEvent(area === "it" ? "IT" : "Finance", "Checklist", {
 						index: idx,
 						checked: t.checked,
 					});
 					save();
-					evaluateState("checkbox");
-				}
-				if (t.id === "oriDT") {
-					state.orientation.scheduledAt = t.value || "";
-					save();
-					evaluateState("schedule-change");
+					// Enable lane buttons accordingly
+					const itBtn = $("#btnITDone"),
+						fiBtn = $("#btnFINDone");
+					if (itBtn) itBtn.disabled = !laneAllChecked("it") || state.it.done;
+					if (fiBtn)
+						fiBtn.disabled = !laneAllChecked("finance") || state.finance.done;
+					renderRing();
+					// Auto show proceed if both lanes are complete (all tasks checked or approved)
+					$("#btnProceed").style.display =
+						state.status === "In IT/Finance" && bothLanesDone()
+							? "inline-flex"
+							: "none";
 				}
 			});
 
 			document.addEventListener("click", (e) => {
 				const t = e.target;
+				if (!t) return;
+
 				if (t.id === "btnApprove") {
 					state.manager.approvedAt = nowISO();
 					setStatus("In IT/Finance", "Approved → parallel IT & Finance");
-					logEvent("Manager", "Approve", { at: state.manager.approvedAt });
-					renderBoard();
-					return;
-				}
-				if (t.id === "btnReqChange") {
-					state.manager.changeReason = "Please fix profile data";
-					setStatus("Changes Requested", "Back to HR for changes");
-					logEvent("Manager", "Request Changes");
-					renderBoard();
-					return;
-				}
-				if (t.id === "btnITDone") {
-					if (!laneAll("it")) return;
-					state.it.done = true;
-					logEvent("IT", "Approve Lane");
-					save();
-					evaluateState("it-approve");
-					renderBoard();
-					return;
-				}
-				if (t.id === "btnFINDone") {
-					if (!laneAll("finance")) return;
-					state.finance.done = true;
-					logEvent("Finance", "Approve Lane");
-					save();
-					evaluateState("fin-approve");
-					renderBoard();
-					return;
-				}
-				if (t.id === "btnSchedule") {
-					if (!parallelComplete()) return;
-					if (!state.orientation.scheduledAt) {
-						const d = new Date();
-						d.setDate(d.getDate() + 1);
-						d.setHours(9, 0, 0, 0);
-						const pad = (n) => String(n).padStart(2, "0");
-						state.orientation.scheduledAt = `${d.getFullYear()}-${pad(
-							d.getMonth() + 1
-						)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-					}
-					logEvent("HR", "Schedule Orientation", {
-						at: state.orientation.scheduledAt,
+					logEvent("Manager", "Approve", {
+						approvedAt: state.manager.approvedAt,
 					});
 					save();
 					renderBoard();
 					return;
 				}
+
+				if (t.id === "btnReqChange") {
+					openModal();
+					return;
+				}
+
+				if (t.id === "btnITDone") {
+					if (!laneAllChecked("it")) return;
+					state.it.done = true;
+					logEvent("IT", "Approve Lane", { at: nowISO() });
+					save();
+					renderBoard();
+					if (state.status === "In IT/Finance" && bothLanesDone()) {
+						setStatus(
+							"Orientation",
+							"Parallel complete → schedule orientation"
+						);
+						logEvent("System", "Advance to Orientation", { when: nowISO() });
+						save();
+						renderBoard();
+					}
+					return;
+				}
+
+				if (t.id === "btnFINDone") {
+					if (!laneAllChecked("finance")) return;
+					state.finance.done = true;
+					logEvent("Finance", "Approve Lane", { at: nowISO() });
+					save();
+					renderBoard();
+					if (state.status === "In IT/Finance" && bothLanesDone()) {
+						setStatus(
+							"Orientation",
+							"Parallel complete → schedule orientation"
+						);
+						logEvent("System", "Advance to Orientation", { when: nowISO() });
+						save();
+						renderBoard();
+					}
+					return;
+				}
+
+				if (t.id === "btnProceed") {
+					if (state.status === "In IT/Finance" && bothLanesDone()) {
+						setStatus(
+							"Orientation",
+							"Parallel complete → schedule orientation"
+						);
+						logEvent("System", "Proceed Button → Orientation", {
+							when: nowISO(),
+						});
+						save();
+						renderBoard();
+					}
+					return;
+				}
+
+				if (t.id === "btnSchedule") {
+					let v = $("#oriDT").value;
+					if (!v) {
+						const d = new Date();
+						d.setDate(d.getDate() + 1);
+						d.setHours(9, 0, 0, 0);
+						const pad = (n) => String(n).padStart(2, "0");
+						v = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(
+							d.getDate()
+						)}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+						$("#oriDT").value = v;
+					}
+					state.orientation.scheduledAt = v;
+					logEvent("HR", "Schedule Orientation", { scheduledAt: v });
+					save();
+					const doneBtn = $("#btnDone");
+					if (doneBtn) doneBtn.disabled = !state.orientation.scheduledAt;
+					return;
+				}
+
 				if (t.id === "btnDone") {
 					if (!state.orientation.scheduledAt) return;
 					state.orientation.done = true;
 					setStatus("Completed", "All steps finished");
-					logEvent("HR", "Orientation Done");
+					logEvent("HR", "Orientation Done", { at: nowISO() });
 					save();
 					renderBoard();
 					return;
 				}
+
 				if (t.id === "btnDraft") {
-					readForm();
+					readFormIntoState();
 					setStatus("Draft", "Draft saved");
-					logEvent("HR", "Save Draft");
+					logEvent("HR", "Save Draft", { when: nowISO() });
 					save();
 					renderBoard();
 					return;
 				}
+
 				if (t.id === "btnSubmit") {
 					const formEmail = $("#empEmail").value.trim();
-					const isNew = state.card.email !== formEmail;
-					readForm();
-					if (!state.requestId || isNew) {
+					const isNewEmployee = state.card.email !== formEmail;
+					readFormIntoState();
+					if (!state.requestId || isNewEmployee) {
 						state.requestId = genId();
 						setStatus("Pending Approval", "Submitted to Manager");
 						logEvent("HR", "Submit", { requestId: state.requestId });
-					} else if (["Draft", "Changes Requested"].includes(state.status)) {
-						setStatus("Pending Approval", "Submitted to Manager");
-						logEvent("HR", "Submit (existing)", { requestId: state.requestId });
 					} else {
-						logEvent("System", "Submit Ignored (idempotent)", {
-							status: state.status,
-						});
+						if (!["Draft", "Changes Requested"].includes(state.status)) {
+							logEvent("System", "Submit Ignored (idempotent)", {
+								requestId: state.requestId,
+								status: state.status,
+							});
+						} else {
+							setStatus("Pending Approval", "Submitted to Manager");
+							logEvent("HR", "Submit (existing requestId)", {
+								requestId: state.requestId,
+							});
+						}
 					}
 					save();
 					renderBoard();
 					return;
 				}
+
+				if (t.id === "modalCancel") {
+					closeModal();
+					return;
+				}
+				if (t.id === "modalOk") {
+					state.manager.changeReason =
+						$("#changeReason").value || "(no reason provided)";
+					setStatus("Changes Requested", "Back to HR for changes");
+					logEvent("Manager", "Request Changes", {
+						reason: state.manager.changeReason,
+					});
+					save();
+					renderBoard();
+					closeModal();
+					return;
+				}
 			});
 
-			/* ===== Form I/O ===== */
-			function readForm() {
+			/* ===== Modal helpers ===== */
+			function openModal() {
+				$("#modal").hidden = false;
+				$("#modalWrap").setAttribute("aria-hidden", "false");
+				$("#changeReason").value = state.manager.changeReason || "";
+				$("#changeReason").focus();
+			}
+			function closeModal() {
+				$("#modal").hidden = true;
+				$("#modalWrap").setAttribute("aria-hidden", "true");
+			}
+			window.addEventListener("keydown", (e) => {
+				if (e.key === "Escape" && $("#modal") && !$("#modal").hidden)
+					closeModal();
+			});
+
+			/* ===== Form read ===== */
+			function readFormIntoState() {
 				state.card.name = $("#empName").value.trim();
 				state.card.email = $("#empEmail").value.trim();
 				state.card.position = $("#empPos").value.trim();
@@ -853,8 +1110,8 @@
 			});
 
 			/* ===== Boot ===== */
-			(function boot() {
-				// seed form
+			function boot() {
+				// Form seed
 				$("#empName").value = state.card.name || "";
 				$("#empEmail").value = state.card.email || "";
 				$("#empPos").value = state.card.position || "";
@@ -870,14 +1127,10 @@
 					Completed: "Completed",
 				};
 				setStatus(map[state.status] ? state.status : "Draft");
-				$("#audit").textContent = JSON.stringify(audit, null, 2);
+				renderAudit();
 				renderBoard();
-				// Jika reload saat paralel sudah selesai, langsung ke Orientation
-				if (parallelComplete() && state.status === "In IT/Finance") {
-					setStatus("Orientation");
-					renderBoard();
-				}
-			})();
+			}
+			boot();
 		</script>
 	</body>
 </html>
