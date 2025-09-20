@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="id">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Employee Onboarding – Fixed Parallel & Progress</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style>
+			:root {
+				--bg: #f4f6f9;
+				--card: #fff;
+				--ink: #243046;
+				--muted: #6b7280;
+				--blue: #0a66c2;
+				--ring: #e5eaf1;
+				--border: #e3e8ef;
+				--ok: #15b374;
+				--warn: #f59e0b;
+			}
+			html,
+			body {
+				height: 100%;
+			}
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--ink);
+				font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+			}
+			header {
+				position: sticky;
+				top: 0;
+				z-index: 10;
+				background: linear-gradient(90deg, #01315f, #00509a);
+				color: #fff;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 12px 16px;
+			}
+			header h1 {
+				margin: 0;
+				font-size: 18px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+			.chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				background: #0e76d6;
+				border-radius: 999px;
+				padding: 6px 10px;
+				font-weight: 600;
+			}
+			main {
+				display: grid;
+				grid-template-columns: minmax(320px, 420px) 1fr;
+				gap: 16px;
+				padding: 16px;
+			}
+			@media (max-width: 920px) {
+				main {
+					grid-template-columns: 1fr;
+				}
+			}
+			.card {
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				box-shadow: 0 6px 20px rgba(2, 8, 23, 0.03);
+				padding: 16px;
+			}
+			h2 {
+				margin: 0 0 12px 0;
+				font-size: 16px;
+				color: #0c2b50;
+			}
+			label {
+				display: block;
+				margin: 0.5rem 0 0.25rem 0;
+				font-weight: 600;
+			}
+			input,
+			select,
+			textarea,
+			button {
+				font: inherit;
+			}
+			input,
+			select,
+			textarea {
+				width: 100%;
+				padding: 10px;
+				border: 1px solid #cfd8e3;
+				border-radius: 10px;
+				outline: none;
+				background: #fff;
+			}
+			input:focus,
+			select:focus,
+			textarea:focus {
+				box-shadow: 0 0 0 3px rgba(43, 138, 239, 0.2);
+				border-color: var(--blue);
+			}
+			.grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 10px;
+			}
+			.grid .full {
+				grid-column: 1 / -1;
+			}
+			@media (max-width: 640px) {
+				.grid {
+					grid-template-columns: 1fr;
+				}
+			}
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 10px 14px;
+				border-radius: 10px;
+				border: 1px solid var(--border);
+				cursor: pointer;
+			}
+			.btn.primary {
+				background: var(--blue);
+				border-color: var(--blue);
+				color: #fff;
+				font-weight: 700;
+			}
+			.btn.secondary {
+				background: #eef2f7;
+			}
+			.btn.success {
+				background: var(--ok);
+				color: #fff;
+				border-color: var(--ok);
+			}
+			.btn.warn {
+				background: var(--warn);
+				color: #111;
+				border-color: var(--warn);
+			}
+			.btn:focus {
+				outline: 2px solid var(--blue);
+				outline-offset: 2px;
+			}
+			.btn[disabled] {
+				opacity: 0.45;
+				cursor: not-allowed;
+			}
+			.actions {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+				margin-top: 8px;
+			}
+			.board {
+				display: grid;
+				grid-template-columns: repeat(5, minmax(160px, 1fr));
+				gap: 12px;
+			}
+			@media (max-width: 1000px) {
+				.board {
+					grid-template-columns: repeat(2, 1fr);
+				}
+			}
+			@media (max-width: 640px) {
+				.board {
+					grid-template-columns: 1fr;
+				}
+			}
+			.lane {
+				background: #fbfcfe;
+				border: 1px dashed #d7e0ea;
+				border-radius: 12px;
+				min-height: 140px;
+				padding: 10px;
+			}
+			.lane h3 {
+				margin: 0 0 8px 0;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 14px;
+				color: #0c2b50;
+			}
+			.card-mini {
+				background: #fff;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 10px;
+				margin: 8px 0;
+			}
+			.meta {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				flex-wrap: wrap;
+				font-size: 12px;
+				color: var(--muted);
+			}
+			.badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				padding: 4px 8px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				background: #f6f9fc;
+			}
+			.badge.ok {
+				background: #e9fbf3;
+				border-color: #c7f0db;
+				color: #0c7b52;
+			}
+			.badge.warn {
+				background: #fff7e6;
+				border-color: #ffe1a6;
+				color: #a16800;
+			}
+			.badge.par {
+				background: #eef6ff;
+				border-color: #cfe7ff;
+				color: #0d5fb8;
+			}
+			.check {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin: 6px 0;
+			}
+			.progress-wrap {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-top: 8px;
+			}
+			.ring {
+				--pct: 0;
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				background: conic-gradient(
+					var(--blue) calc(var(--pct) * 1%),
+					var(--ring) 0
+				);
+				display: grid;
+				place-items: center;
+				font-weight: 700;
+				color: #0c2b50;
+			}
+			.ring span {
+				background: #fff;
+				border-radius: 999px;
+				padding: 2px 6px;
+				border: 1px solid var(--border);
+				font-size: 12px;
+				min-width: 34px;
+				text-align: center;
+			}
+			pre.audit {
+				background: #0f172a;
+				color: #e5e7eb;
+				padding: 12px;
+				border-radius: 10px;
+				overflow: auto;
+				max-height: 220px;
+				font-size: 12px;
+			}
+			footer {
+				padding: 12px;
+				text-align: center;
+				background: #fff;
+				border-top: 1px solid var(--border);
+			}
+			/* Tooltip sederhana */
+			[data-tip] {
+				position: relative;
+			}
+			[data-tip]:hover::after {
+				content: attr(data-tip);
+				position: absolute;
+				left: 0;
+				top: 100%;
+				margin-top: 6px;
+				background: #111827;
+				color: #fff;
+				padding: 6px 8px;
+				border-radius: 6px;
+				white-space: nowrap;
+				font-size: 12px;
+			}
+		</style>
+	</head>
+	<body>
+		<header aria-label="Header">
+			<h1 tabindex="0">💼 Employee Onboarding</h1>
+			<div id="statusChip" class="chip" aria-live="polite" role="status">
+				<span id="statusText">Draft</span>
+			</div>
+		</header>
+
+		<main role="main">
+			<!-- HR -->
+			<section class="card" aria-label="HR Create Request">
+				<h2 id="hr-title">HR – Create Request</h2>
+				<form id="hrForm" aria-labelledby="hr-title">
+					<div class="grid">
+						<div class="full">
+							<label for="empName">Employee Name</label>
+							<input id="empName" value="John Doe" required />
+						</div>
+						<div class="full">
+							<label for="empEmail">Email</label>
+							<input
+								id="empEmail"
+								type="email"
+								value="john.doe@example.com"
+								required
+							/>
+						</div>
+						<div>
+							<label for="empPos">Position</label>
+							<input id="empPos" value="Backend Engineer" />
+						</div>
+						<div>
+							<label for="empDate">Start Date</label>
+							<input id="empDate" type="date" />
+						</div>
+						<div>
+							<label for="empMgr">Manager</label>
+							<input id="empMgr" value="Jane Manager" />
+						</div>
+						<div class="full">
+							<label for="empNotes">Notes</label>
+							<textarea id="empNotes" rows="3">Needs laptop & VPN</textarea>
+						</div>
+					</div>
+					<div class="actions" role="group" aria-label="Form actions">
+						<button
+							type="button"
+							class="btn primary"
+							id="btnSubmit"
+							title="Submit (idempotent)"
+						>
+							Submit
+						</button>
+						<button type="button" class="btn secondary" id="btnDraft">
+							Save Draft
+						</button>
+					</div>
+				</form>
+			</section>
+
+			<!-- Board -->
+			<section class="card" aria-label="Swimlane Board">
+				<h2>Process Board (BPMN)</h2>
+				<div class="board">
+					<div class="lane">
+						<h3>HR 👩‍💼</h3>
+						<div id="lane-hr"></div>
+					</div>
+					<div class="lane">
+						<h3>Manager 👨‍💼</h3>
+						<div id="lane-manager"></div>
+					</div>
+					<div class="lane">
+						<h3>IT 🖥️ <span class="badge par">Parallel</span></h3>
+						<div id="lane-it"></div>
+					</div>
+					<div class="lane">
+						<h3>Finance 💳 <span class="badge par">Parallel</span></h3>
+						<div id="lane-finance"></div>
+					</div>
+					<div class="lane">
+						<h3>Orientation 🎓</h3>
+						<div id="lane-orientation"></div>
+					</div>
+				</div>
+				<div class="progress-wrap" aria-label="Combined progress IT + Finance">
+					<div id="ring" class="ring" style="--pct: 0">
+						<span id="ringText">0%</span>
+					</div>
+					<div class="meta" id="laneProgressText">0/6 tasks completed</div>
+				</div>
+			</section>
+		</main>
+
+		<main style="padding: 0 16px 16px 16px">
+			<section class="card" aria-label="Audit Trail">
+				<h2>Audit Trail</h2>
+				<details open>
+					<summary>Events (JSON)</summary>
+					<pre id="audit" class="audit"></pre>
+				</details>
+			</section>
+		</main>
+
+		<footer>
+			<button id="btnReset" class="btn secondary">Reset Demo Data</button>
+		</footer>
+
+		<script>
+			/* ===== Helpers & Persistence ===== */
+			const LS_STATE = "onboarding.state.fx",
+				LS_AUDIT = "onboarding.audit.fx";
+			const $ = (s, r = document) => r.querySelector(s);
+			const el = (t, a = {}) => Object.assign(document.createElement(t), a);
+			const nowISO = () => new Date().toISOString();
+			const genId = () =>
+				crypto?.randomUUID?.() ||
+				"req_" + Math.random().toString(16).slice(2) + Date.now();
+			const saveLS = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+			const loadLS = (k, d = null) => {
+				try {
+					return JSON.parse(localStorage.getItem(k)) ?? d;
+				} catch {
+					return d;
+				}
+			};
+
+			/* ===== State ===== */
+			let state = loadLS(LS_STATE, {
+				status: "Draft",
+				requestId: null,
+				createdAt: nowISO(),
+				card: {
+					name: "John Doe",
+					email: "john.doe@example.com",
+					position: "Backend Engineer",
+					startDate: "",
+					manager: "Jane Manager",
+					notes: "Needs laptop & VPN",
+				},
+				manager: { changeReason: null, approvedAt: null },
+				it: { tasks: [false, false, false], done: false },
+				finance: { tasks: [false, false, false], done: false },
+				orientation: { scheduledAt: "", done: false },
+			});
+			let audit = loadLS(LS_AUDIT, []);
+
+			const save = () => saveLS(LS_STATE, state);
+			function logEvent(actor, action, payload = {}) {
+				audit.push({ time: nowISO(), actor, action, payload });
+				saveLS(LS_AUDIT, audit);
+				$("#audit").textContent = JSON.stringify(audit, null, 2);
+			}
+			function setStatus(s, tip) {
+				state.status = s;
+				$("#statusText").textContent = s;
+				$("#statusChip").setAttribute("data-tip", tip || "");
+				save();
+			}
+
+			/* ===== Progress ===== */
+			function progressCounts() {
+				const total = 6;
+				const done = [...state.it.tasks, ...state.finance.tasks].filter(
+					Boolean
+				).length;
+				return {
+					done,
+					total,
+					pct: Math.max(0, Math.min(100, Math.round((done / total) * 100))),
+				};
+			}
+			function renderProgress() {
+				const { done, total, pct } = progressCounts();
+				$("#ring").style.setProperty("--pct", String(pct)); // <-- set var as string
+				$("#ringText").textContent = pct + "%";
+				$("#laneProgressText").textContent = `${done}/${total} tasks completed`;
+			}
+
+			/* ===== Guards ===== */
+			const laneAll = (lane) => state[lane].tasks.every(Boolean);
+			const parallelComplete = () =>
+				(state.it.done || laneAll("it")) &&
+				(state.finance.done || laneAll("finance"));
+
+			/* ===== Central Evaluator ===== */
+			function evaluateState(source = "eval") {
+				renderProgress();
+
+				// Enable/disable lane approve buttons if exist
+				const itBtn = $("#btnITDone");
+				if (itBtn) itBtn.disabled = !laneAll("it") || state.it.done;
+				const fiBtn = $("#btnFINDone");
+				if (fiBtn) fiBtn.disabled = !laneAll("finance") || state.finance.done;
+
+				// Auto-advance from Parallel to Orientation regardless of minor drift
+				if (
+					["In IT/Finance", "Orientation"].includes(state.status) &&
+					parallelComplete()
+				) {
+					if (state.status !== "Orientation") {
+						setStatus(
+							"Orientation",
+							"Parallel complete → schedule orientation"
+						);
+						logEvent("System", "Advance to Orientation", { trigger: source });
+						renderBoard(); // re-render to show Orientation controls
+						return; // stop further evaluation (fresh DOM)
+					}
+				}
+
+				// Enable Orientation action buttons dynamically
+				const schedule = $("#btnSchedule"),
+					done = $("#btnDone");
+				const enabled = parallelComplete();
+				if (schedule) schedule.disabled = !enabled;
+				if (done) done.disabled = !(enabled && state.orientation.scheduledAt);
+				save();
+			}
+
+			/* ===== Board Rendering ===== */
+			function clearLanes() {
+				["hr", "manager", "it", "finance", "orientation"].forEach(
+					(k) => ($("#lane-" + k).innerHTML = "")
+				);
+			}
+			function card(title, meta = [], actions = []) {
+				const c = el("div", { className: "card-mini", tabIndex: 0 });
+				c.append(
+					el("div", {
+						textContent: title,
+						style: "font-weight:700;margin-bottom:6px",
+					})
+				);
+				if (meta.length) {
+					const m = el("div", { className: "meta" });
+					meta.forEach((x) =>
+						m.append(
+							el("span", {
+								className: "badge " + (x.kind || ""),
+								textContent: x.text,
+							})
+						)
+					);
+					c.append(m);
+				}
+				if (actions.length) {
+					const a = el("div", { className: "actions" });
+					actions.forEach((ac) => {
+						const b = el("button", {
+							className: "btn " + (ac.kind || "secondary"),
+							textContent: ac.label,
+							type: "button",
+							id: ac.id,
+							disabled: !!ac.disabled,
+							title: ac.title || ac.label,
+						});
+						a.append(b);
+					});
+					c.append(a);
+				}
+				return c;
+			}
+			function renderBoard() {
+				clearLanes();
+				renderProgress();
+
+				const metaBase = [
+					{ text: state.card.name },
+					{ text: state.card.position || "—" },
+					{ text: (state.card.startDate || "").slice(0, 10) },
+				];
+
+				if (state.status === "Draft" || state.status === "Changes Requested") {
+					$("#lane-hr").append(card("Draft Request", metaBase));
+				}
+
+				if (state.status === "Pending Approval") {
+					$("#lane-manager").append(
+						card(
+							"Pending Approval",
+							[...metaBase, { text: "Gateway", kind: "warn" }],
+							[
+								{ id: "btnApprove", label: "Approve", kind: "primary" },
+								{ id: "btnReqChange", label: "Request Changes" },
+							]
+						)
+					);
+				}
+
+				if (
+					["In IT/Finance", "Orientation", "Completed"].includes(state.status)
+				) {
+					// IT
+					const it = el("div", { className: "card-mini" });
+					it.append(
+						el("div", {
+							textContent: "IT Checklist",
+							style: "font-weight:700;margin-bottom:6px",
+						})
+					);
+					["Create account", "Assign laptop", "Grant system access"].forEach(
+						(t, i) => {
+							const row = el("label", { className: "check" });
+							row.append(
+								el("input", {
+									type: "checkbox",
+									"data-area": "it",
+									"data-idx": i,
+									checked: state.it.tasks[i],
+								}),
+								el("span", { textContent: t })
+							);
+							it.append(row);
+						}
+					);
+					const itMeta = el("div", { className: "meta" });
+					if (state.it.done)
+						itMeta.append(
+							el("span", { className: "badge ok", textContent: "IT Approved" })
+						);
+					const itAct = el("div", { className: "actions" });
+					itAct.append(
+						el("button", {
+							className: "btn success",
+							id: "btnITDone",
+							textContent: state.it.done ? "IT Done ✓" : "Approve IT",
+							disabled: !laneAll("it") || state.it.done,
+							type: "button",
+						})
+					);
+					it.append(itMeta, itAct);
+					$("#lane-it").append(it);
+
+					// Finance
+					const fi = el("div", { className: "card-mini" });
+					fi.append(
+						el("div", {
+							textContent: "Finance Checklist",
+							style: "font-weight:700;margin-bottom:6px",
+						})
+					);
+					["Add to payroll", "Tax form", "Bank account verification"].forEach(
+						(t, i) => {
+							const row = el("label", { className: "check" });
+							row.append(
+								el("input", {
+									type: "checkbox",
+									"data-area": "finance",
+									"data-idx": i,
+									checked: state.finance.tasks[i],
+								}),
+								el("span", { textContent: t })
+							);
+							fi.append(row);
+						}
+					);
+					const fiMeta = el("div", { className: "meta" });
+					if (state.finance.done)
+						fiMeta.append(
+							el("span", {
+								className: "badge ok",
+								textContent: "Finance Approved",
+							})
+						);
+					const fiAct = el("div", { className: "actions" });
+					fiAct.append(
+						el("button", {
+							className: "btn success",
+							id: "btnFINDone",
+							textContent: state.finance.done
+								? "Finance Done ✓"
+								: "Approve Finance",
+							disabled: !laneAll("finance") || state.finance.done,
+							type: "button",
+						})
+					);
+					fi.append(fiMeta, fiAct);
+					$("#lane-finance").append(fi);
+				}
+
+				if (["Orientation", "Completed"].includes(state.status)) {
+					const enabled = parallelComplete();
+					const box = card("Orientation", [
+						{
+							text: enabled ? "Enabled" : "Waiting Parallel",
+							kind: enabled ? "ok" : "warn",
+						},
+					]);
+					const dt = el("input", {
+						type: "datetime-local",
+						id: "oriDT",
+						value: state.orientation.scheduledAt || "",
+					});
+					const btns = el("div", { className: "actions" });
+					btns.append(
+						el("button", {
+							className: "btn secondary",
+							id: "btnSchedule",
+							textContent: "Schedule Orientation",
+							disabled: !enabled,
+							type: "button",
+						})
+					);
+					btns.append(
+						el("button", {
+							className: "btn primary",
+							id: "btnDone",
+							textContent: "Mark as Done",
+							disabled: !(enabled && state.orientation.scheduledAt),
+							type: "button",
+						})
+					);
+					box.append(dt, btns);
+					$("#lane-orientation").append(box);
+				}
+
+				if (state.status === "Completed") {
+					$("#lane-orientation").append(
+						card("Onboarding Completed", [{ text: "Completed", kind: "ok" }])
+					);
+				}
+
+				// pastikan tombol/indikator mengikuti kondisi terakhir
+				evaluateState("renderBoard");
+			}
+
+			/* ===== Event Delegation (aman saat re-render) ===== */
+			document.addEventListener("change", (e) => {
+				const t = e.target;
+				if (t.matches('input[type="checkbox"][data-area]')) {
+					const area = t.getAttribute("data-area"),
+						idx = +t.getAttribute("data-idx");
+					state[area].tasks[idx] = t.checked;
+					logEvent(area === "it" ? "IT" : "Finance", "Checklist", {
+						index: idx,
+						checked: t.checked,
+					});
+					save();
+					evaluateState("checkbox");
+				}
+				if (t.id === "oriDT") {
+					state.orientation.scheduledAt = t.value || "";
+					save();
+					evaluateState("schedule-change");
+				}
+			});
+
+			document.addEventListener("click", (e) => {
+				const t = e.target;
+				if (t.id === "btnApprove") {
+					state.manager.approvedAt = nowISO();
+					setStatus("In IT/Finance", "Approved → parallel IT & Finance");
+					logEvent("Manager", "Approve", { at: state.manager.approvedAt });
+					renderBoard();
+					return;
+				}
+				if (t.id === "btnReqChange") {
+					state.manager.changeReason = "Please fix profile data";
+					setStatus("Changes Requested", "Back to HR for changes");
+					logEvent("Manager", "Request Changes");
+					renderBoard();
+					return;
+				}
+				if (t.id === "btnITDone") {
+					if (!laneAll("it")) return;
+					state.it.done = true;
+					logEvent("IT", "Approve Lane");
+					save();
+					evaluateState("it-approve");
+					renderBoard();
+					return;
+				}
+				if (t.id === "btnFINDone") {
+					if (!laneAll("finance")) return;
+					state.finance.done = true;
+					logEvent("Finance", "Approve Lane");
+					save();
+					evaluateState("fin-approve");
+					renderBoard();
+					return;
+				}
+				if (t.id === "btnSchedule") {
+					if (!parallelComplete()) return;
+					if (!state.orientation.scheduledAt) {
+						const d = new Date();
+						d.setDate(d.getDate() + 1);
+						d.setHours(9, 0, 0, 0);
+						const pad = (n) => String(n).padStart(2, "0");
+						state.orientation.scheduledAt = `${d.getFullYear()}-${pad(
+							d.getMonth() + 1
+						)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+					}
+					logEvent("HR", "Schedule Orientation", {
+						at: state.orientation.scheduledAt,
+					});
+					save();
+					renderBoard();
+					return;
+				}
+				if (t.id === "btnDone") {
+					if (!state.orientation.scheduledAt) return;
+					state.orientation.done = true;
+					setStatus("Completed", "All steps finished");
+					logEvent("HR", "Orientation Done");
+					save();
+					renderBoard();
+					return;
+				}
+				if (t.id === "btnDraft") {
+					readForm();
+					setStatus("Draft", "Draft saved");
+					logEvent("HR", "Save Draft");
+					save();
+					renderBoard();
+					return;
+				}
+				if (t.id === "btnSubmit") {
+					const formEmail = $("#empEmail").value.trim();
+					const isNew = state.card.email !== formEmail;
+					readForm();
+					if (!state.requestId || isNew) {
+						state.requestId = genId();
+						setStatus("Pending Approval", "Submitted to Manager");
+						logEvent("HR", "Submit", { requestId: state.requestId });
+					} else if (["Draft", "Changes Requested"].includes(state.status)) {
+						setStatus("Pending Approval", "Submitted to Manager");
+						logEvent("HR", "Submit (existing)", { requestId: state.requestId });
+					} else {
+						logEvent("System", "Submit Ignored (idempotent)", {
+							status: state.status,
+						});
+					}
+					save();
+					renderBoard();
+					return;
+				}
+			});
+
+			/* ===== Form I/O ===== */
+			function readForm() {
+				state.card.name = $("#empName").value.trim();
+				state.card.email = $("#empEmail").value.trim();
+				state.card.position = $("#empPos").value.trim();
+				state.card.startDate = $("#empDate").value;
+				state.card.manager = $("#empMgr").value.trim();
+				state.card.notes = $("#empNotes").value.trim();
+			}
+
+			/* ===== Reset ===== */
+			$("#btnReset").addEventListener("click", () => {
+				localStorage.removeItem(LS_STATE);
+				localStorage.removeItem(LS_AUDIT);
+				location.reload();
+			});
+
+			/* ===== Boot ===== */
+			(function boot() {
+				// seed form
+				$("#empName").value = state.card.name || "";
+				$("#empEmail").value = state.card.email || "";
+				$("#empPos").value = state.card.position || "";
+				$("#empDate").value = state.card.startDate || "";
+				$("#empMgr").value = state.card.manager || "";
+				$("#empNotes").value = state.card.notes || "";
+				const map = {
+					Draft: "Draft",
+					"Pending Approval": "Pending Approval",
+					"In IT/Finance": "In IT/Finance",
+					Orientation: "Orientation",
+					"Changes Requested": "Draft (changes requested)",
+					Completed: "Completed",
+				};
+				setStatus(map[state.status] ? state.status : "Draft");
+				$("#audit").textContent = JSON.stringify(audit, null, 2);
+				renderBoard();
+				// Jika reload saat paralel sudah selesai, langsung ke Orientation
+				if (parallelComplete() && state.status === "In IT/Finance") {
+					setStatus("Orientation");
+					renderBoard();
+				}
+			})();
+		</script>
+	</body>
+</html>
