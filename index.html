@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>
+			Employee Onboarding – Interactive Mockup (Vanilla, Parallel Fix v2)
+		</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<style>
+			:root {
+				--bg: #f4f6f9;
+				--card: #ffffff;
+				--ink: #243046;
+				--muted: #6b7280;
+				--blue: #0a66c2;
+				--ring: #e5eaf1;
+				--border: #e3e8ef;
+				--ok: #15b374;
+				--warn: #f59e0b;
+			}
+			html,
+			body {
+				height: 100%;
+			}
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--ink);
+				font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+			}
+			header[role="banner"] {
+				position: sticky;
+				top: 0;
+				z-index: 20;
+				background: linear-gradient(90deg, #01315f, #00509a);
+				color: #fff;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 12px 16px;
+			}
+			header h1 {
+				margin: 0;
+				font-size: 18px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+			.status-chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				background: #0e76d6;
+				border-radius: 999px;
+				padding: 6px 10px;
+				font-weight: 600;
+				position: relative;
+			}
+			.status-chip[data-tooltip]:hover::after {
+				content: attr(data-tooltip);
+				position: absolute;
+				left: 0;
+				top: 100%;
+				margin-top: 6px;
+				background: #111827;
+				color: #fff;
+				padding: 6px 8px;
+				border-radius: 6px;
+				white-space: nowrap;
+				font-size: 12px;
+			}
+			main {
+				display: grid;
+				grid-template-columns: minmax(320px, 420px) 1fr;
+				gap: 16px;
+				padding: 16px;
+			}
+			@media (max-width: 920px) {
+				main {
+					grid-template-columns: 1fr;
+				}
+			}
+			.card {
+				background: var(--card);
+				border: 1px solid var(--border);
+				border-radius: 12px;
+				box-shadow: 0 6px 20px rgba(2, 8, 23, 0.03);
+				padding: 16px;
+			}
+			h2 {
+				margin: 0 0 12px 0;
+				font-size: 16px;
+				color: #0c2b50;
+			}
+			label {
+				display: block;
+				margin: 0.5rem 0 0.25rem 0;
+				font-weight: 600;
+			}
+			input,
+			select,
+			textarea,
+			button {
+				font: inherit;
+			}
+			input,
+			select,
+			textarea {
+				width: 100%;
+				padding: 10px;
+				border: 1px solid #cfd8e3;
+				border-radius: 10px;
+				outline: none;
+				background: #fff;
+			}
+			input:focus,
+			select:focus,
+			textarea:focus {
+				box-shadow: 0 0 0 3px rgba(43, 138, 239, 0.2);
+				border-color: var(--blue);
+			}
+			.form-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 10px;
+			}
+			.form-grid .full {
+				grid-column: 1 / -1;
+			}
+			@media (max-width: 640px) {
+				.form-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 10px 14px;
+				border-radius: 10px;
+				border: 1px solid var(--border);
+				cursor: pointer;
+			}
+			.btn.primary {
+				background: var(--blue);
+				border-color: var(--blue);
+				color: #fff;
+				font-weight: 700;
+			}
+			.btn.secondary {
+				background: #eef2f7;
+			}
+			.btn.success {
+				background: var(--ok);
+				color: #fff;
+				border-color: var(--ok);
+			}
+			.btn.warn {
+				background: var(--warn);
+				color: #111;
+				border-color: var(--warn);
+			}
+			.btn:focus {
+				outline: 2px solid var(--blue);
+				outline-offset: 2px;
+			}
+			.btn[disabled] {
+				opacity: 0.45;
+				cursor: not-allowed;
+			}
+			.actions {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+				margin-top: 8px;
+				justify-content: flex-start;
+			}
+
+			/* Board */
+			.board {
+				display: grid;
+				grid-template-columns: repeat(5, minmax(160px, 1fr));
+				gap: 12px;
+			}
+			@media (max-width: 1000px) {
+				.board {
+					grid-template-columns: repeat(2, 1fr);
+				}
+			}
+			@media (max-width: 640px) {
+				.board {
+					grid-template-columns: 1fr;
+				}
+			}
+			.lane {
+				background: #fbfcfe;
+				border: 1px dashed #d7e0ea;
+				border-radius: 12px;
+				min-height: 140px;
+				padding: 10px;
+			}
+			.lane h3 {
+				margin: 0 0 8px 0;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				font-size: 14px;
+				color: #0c2b50;
+			}
+			.onboard-card {
+				background: #fff;
+				border: 1px solid var(--border);
+				border-radius: 10px;
+				padding: 10px;
+				margin: 8px 0;
+			}
+			.meta {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				flex-wrap: wrap;
+				font-size: 12px;
+				color: var(--muted);
+			}
+			.badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				padding: 4px 8px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				background: #f6f9fc;
+			}
+			.badge.ok {
+				background: #e9fbf3;
+				border-color: #c7f0db;
+				color: #0c7b52;
+			}
+			.badge.warn {
+				background: #fff7e6;
+				border-color: #ffe1a6;
+				color: #a16800;
+			}
+			.badge.par {
+				background: #eef6ff;
+				border-color: #cfe7ff;
+				color: #0d5fb8;
+			}
+
+			.check {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin: 6px 0;
+			}
+			.progress-wrap {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-top: 8px;
+			}
+			.ring {
+				--pct: 0;
+				width: 48px;
+				height: 48px;
+				border-radius: 50%;
+				background: conic-gradient(
+					var(--blue) calc(var(--pct) * 1%),
+					var(--ring) 0
+				);
+				display: grid;
+				place-items: center;
+				font-weight: 700;
+				color: #0c2b50;
+			}
+			.ring span {
+				background: #fff;
+				border-radius: 999px;
+				padding: 2px 6px;
+				border: 1px solid var(--border);
+				font-size: 12px;
+				min-width: 34px;
+				text-align: center;
+			}
+
+			/* Modal */
+			.modal-backdrop {
+				position: fixed;
+				inset: 0;
+				z-index: 50;
+				background: rgba(0, 0, 0, 0.35);
+				display: none;
+				pointer-events: none;
+			}
+			.modal {
+				background: #fff;
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				z-index: 60;
+				border-radius: 12px;
+				min-width: 280px;
+				max-width: 520px;
+				width: 92%;
+				border: 1px solid var(--border);
+				box-shadow: 0 20px 60px rgba(2, 8, 23, 0.2);
+			}
+			.modal-backdrop[aria-hidden="false"] {
+				display: block;
+				pointer-events: auto;
+			}
+			.modal header {
+				background: #f4f7fb;
+				color: #0c2b50;
+				padding: 12px 16px;
+				border-radius: 12px 12px 0 0;
+			}
+			.modal .body {
+				padding: 16px;
+			}
+			.modal .footer {
+				display: flex;
+				gap: 8px;
+				justify-content: flex-end;
+				padding: 12px 16px;
+				border-top: 1px solid var(--border);
+			}
+
+			details {
+				margin-top: 10px;
+			}
+			pre.audit {
+				background: #0f172a;
+				color: #e5e7eb;
+				padding: 12px;
+				border-radius: 10px;
+				overflow: auto;
+				max-height: 220px;
+				font-size: 12px;
+			}
+			footer[role="contentinfo"] {
+				padding: 12px;
+				text-align: center;
+				background: #fff;
+				border-top: 1px solid var(--border);
+			}
+		</style>
+	</head>
+	<body>
+		<header role="banner" aria-label="Header">
+			<h1 tabindex="0">💼 Employee Onboarding</h1>
+			<div
+				id="statusChip"
+				class="status-chip"
+				data-tooltip="Status keseluruhan"
+				aria-live="polite"
+				aria-atomic="true"
+				role="status"
+			>
+				<span id="statusText">Draft</span>
+			</div>
+		</header>
+
+		<main role="main">
+			<!-- HR Form -->
+			<section class="card" aria-label="HR Create Request">
+				<h2 id="hr-title">HR – Create Request</h2>
+				<form id="hrForm" aria-labelledby="hr-title">
+					<div class="form-grid">
+						<div class="full">
+							<label for="empName">Employee Name</label>
+							<input
+								id="empName"
+								name="empName"
+								aria-label="Employee Name"
+								value="John Doe"
+								required
+							/>
+						</div>
+						<div class="full">
+							<label for="empEmail">Email</label>
+							<input
+								id="empEmail"
+								name="empEmail"
+								type="email"
+								aria-label="Email"
+								value="john.doe@example.com"
+								required
+							/>
+						</div>
+						<div>
+							<label for="empPos">Position</label>
+							<input
+								id="empPos"
+								name="empPos"
+								aria-label="Position"
+								value="Backend Engineer"
+							/>
+						</div>
+						<div>
+							<label for="empDate">Start Date</label>
+							<input
+								id="empDate"
+								name="empDate"
+								type="date"
+								aria-label="Start Date"
+							/>
+						</div>
+						<div>
+							<label for="empMgr">Manager</label>
+							<input
+								id="empMgr"
+								name="empMgr"
+								aria-label="Manager"
+								value="Jane Manager"
+							/>
+						</div>
+						<div class="full">
+							<label for="empNotes">Notes</label>
+							<textarea
+								id="empNotes"
+								name="empNotes"
+								rows="3"
+								aria-label="Notes"
+							>
+Needs laptop & VPN</textarea
+							>
+						</div>
+					</div>
+					<div class="actions" role="group" aria-label="Form actions">
+						<button
+							type="button"
+							class="btn primary"
+							id="btnSubmit"
+							aria-label="Submit Onboarding"
+							title="Submit (idempotent)"
+						>
+							Submit
+						</button>
+						<button
+							type="button"
+							class="btn secondary"
+							id="btnDraft"
+							aria-label="Save Draft"
+						>
+							Save Draft
+						</button>
+					</div>
+				</form>
+				<details style="margin-top: 8px">
+					<summary>Tips</summary>
+					<div class="meta">
+						Submit idempotent: menekan berulang tidak akan buat transisi
+						duplikat; requestId tetap sama.
+					</div>
+				</details>
+			</section>
+
+			<!-- Board -->
+			<section class="card" aria-label="Swimlane Board">
+				<h2>Process Board (BPMN)</h2>
+				<div class="board" role="list" aria-label="Swimlanes">
+					<div class="lane" role="region" aria-labelledby="laneHRLabel">
+						<h3 id="laneHRLabel">HR 👩‍💼</h3>
+						<div id="lane-hr"></div>
+					</div>
+					<div class="lane" role="region" aria-labelledby="laneMgrLabel">
+						<h3 id="laneMgrLabel">Manager 👨‍💼</h3>
+						<div id="lane-manager"></div>
+					</div>
+					<div class="lane" role="region" aria-labelledby="laneITLabel">
+						<h3 id="laneITLabel">
+							IT 🖥️
+							<span class="badge par" aria-label="Parallel">Parallel</span>
+						</h3>
+						<div id="lane-it"></div>
+					</div>
+					<div class="lane" role="region" aria-labelledby="laneFinLabel">
+						<h3 id="laneFinLabel">
+							Finance 💳
+							<span class="badge par" aria-label="Parallel">Parallel</span>
+						</h3>
+						<div id="lane-finance"></div>
+					</div>
+					<div class="lane" role="region" aria-labelledby="laneOriLabel">
+						<h3 id="laneOriLabel">Orientation 🎓</h3>
+						<div id="lane-orientation"></div>
+					</div>
+				</div>
+				<div class="progress-wrap" aria-label="Combined progress IT + Finance">
+					<div id="ring" class="ring" style="--pct: 0">
+						<span id="ringText">0%</span>
+					</div>
+					<div class="meta" id="laneProgressText">0/6 tasks completed</div>
+				</div>
+				<div class="actions">
+					<button
+						id="btnProceed"
+						class="btn warn"
+						style="display: none"
+						aria-label="Proceed to Orientation"
+					>
+						Proceed to Orientation
+					</button>
+				</div>
+			</section>
+		</main>
+
+		<main style="padding: 0 16px 16px 16px">
+			<section class="card" aria-label="Audit Trail">
+				<h2>Audit Trail</h2>
+				<details open>
+					<summary>Events (JSON)</summary>
+					<pre
+						id="audit"
+						class="audit"
+						tabindex="0"
+						aria-label="Audit events"
+					></pre>
+				</details>
+			</section>
+		</main>
+
+		<footer role="contentinfo">
+			<button id="btnReset" class="btn secondary" aria-label="Reset Demo Data">
+				Reset Demo Data
+			</button>
+		</footer>
+
+		<!-- Modal: Request Changes -->
+		<div
+			id="modalWrap"
+			class="modal-backdrop"
+			aria-hidden="true"
+			aria-label="Modal Backdrop"
+		></div>
+		<div
+			id="modal"
+			class="modal"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="modalTitle"
+			aria-describedby="modalDesc"
+			hidden
+		>
+			<header><strong id="modalTitle">Request Changes</strong></header>
+			<div class="body">
+				<p id="modalDesc" class="meta">Berikan alasan perubahan untuk HR:</p>
+				<label for="changeReason">Reason</label>
+				<textarea
+					id="changeReason"
+					rows="3"
+					aria-label="Change reason"
+				></textarea>
+			</div>
+			<div class="footer">
+				<button
+					class="btn secondary"
+					id="modalCancel"
+					aria-label="Cancel request changes"
+				>
+					Cancel (Esc)
+				</button>
+				<button
+					class="btn primary"
+					id="modalOk"
+					aria-label="Confirm request changes"
+				>
+					Submit
+				</button>
+			</div>
+		</div>
+
+		<script>
+			/* ===== Helpers & Persistence ===== */
+			const LS_STATE = "onboarding.state.v1",
+				LS_AUDIT = "onboarding.audit.v1";
+			const $ = (s, r = document) => r.querySelector(s);
+			const el = (t, a = {}) => Object.assign(document.createElement(t), a);
+			const nowISO = () => new Date().toISOString();
+			const genId = () =>
+				crypto && crypto.randomUUID
+					? crypto.randomUUID()
+					: "req_" + Math.random().toString(16).slice(2) + Date.now();
+			const saveLS = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+			const loadLS = (k, d = null) => {
+				try {
+					return JSON.parse(localStorage.getItem(k)) ?? d;
+				} catch {
+					return d;
+				}
+			};
+
+			/* ===== State ===== */
+			let state = loadLS(LS_STATE, {
+				status: "Draft",
+				requestId: null,
+				createdAt: nowISO(),
+				card: {
+					name: "John Doe",
+					email: "john.doe@example.com",
+					position: "Backend Engineer",
+					startDate: "",
+					manager: "Jane Manager",
+					notes: "Needs laptop & VPN",
+				},
+				manager: { changeReason: null, approvedAt: null },
+				it: { tasks: [false, false, false], done: false },
+				finance: { tasks: [false, false, false], done: false },
+				orientation: { scheduledAt: "", done: false },
+			});
+			let audit = loadLS(LS_AUDIT, []);
+
+			/* ===== Persistence & Audit ===== */
+			const save = () => saveLS(LS_STATE, state);
+			function logEvent(actor, action, payload = {}) {
+				audit.push({ time: nowISO(), actor, action, payload });
+				saveLS(LS_AUDIT, audit);
+				renderAudit();
+			}
+			function renderAudit() {
+				$("#audit").textContent = JSON.stringify(audit, null, 2);
+			}
+			function setStatus(s, tip) {
+				state.status = s;
+				$("#statusText").textContent = s;
+				const chip = $("#statusChip");
+				chip.dataset.tooltip = tip || "Status keseluruhan";
+				chip.setAttribute("aria-label", "Status: " + s);
+				save();
+			}
+
+			/* ===== Progress (ring + text) ===== */
+			function progressCounts() {
+				const total = 6;
+				const done = [...state.it.tasks, ...state.finance.tasks].filter(
+					Boolean
+				).length;
+				return {
+					done,
+					total,
+					pct: Math.max(0, Math.min(100, Math.round((done / total) * 100))),
+				};
+			}
+			function renderRing() {
+				const { done, total, pct } = progressCounts();
+				$("#ring").style.setProperty("--pct", pct);
+				$("#ringText").textContent = pct + "%";
+				$("#laneProgressText").textContent = `${done}/${total} tasks completed`;
+			}
+
+			/* ===== Guards ===== */
+			const laneAllChecked = (lane) => state[lane].tasks.every(Boolean);
+			const bothLanesDone = () =>
+				(state.it.done || laneAllChecked("it")) &&
+				(state.finance.done || laneAllChecked("finance"));
+
+			/* ===== Board Rendering ===== */
+			function clearLanes() {
+				["hr", "manager", "it", "finance", "orientation"].forEach(
+					(k) => ($("#lane-" + k).innerHTML = "")
+				);
+			}
+
+			function cardTemplate(title, meta = [], actions = []) {
+				const box = el("div", { className: "onboard-card", tabIndex: 0 });
+				box.append(
+					el("div", {
+						textContent: title,
+						style: "font-weight:700;margin-bottom:6px",
+					})
+				);
+				if (meta.length) {
+					const m = el("div", { className: "meta" });
+					meta.forEach((x) =>
+						m.append(
+							el("span", {
+								className: "badge " + (x.kind || ""),
+								textContent: x.text,
+								title: x.tip || "",
+							})
+						)
+					);
+					box.append(m);
+				}
+				if (actions.length) {
+					const act = el("div", { className: "actions" });
+					actions.forEach((a) => {
+						const b = el("button", {
+							className: "btn " + (a.kind || "secondary"),
+							textContent: a.label,
+							id: a.id,
+							ariaLabel: a.aria || a.label,
+							title: a.title || a.label,
+						});
+						if (a.disabled) b.disabled = true;
+						act.append(b);
+					});
+					box.append(act);
+				}
+				return box;
+			}
+
+			function renderBoard() {
+				clearLanes();
+				renderRing();
+
+				const baseMeta = [
+					{ text: state.card.name },
+					{ text: state.card.position || "—" },
+					{ text: (state.card.startDate || "").toString().slice(0, 10) },
+				];
+
+				if (state.status === "Draft" || state.status === "Changes Requested") {
+					const note = state.manager.changeReason
+						? [
+								{
+									text: "Change: " + state.manager.changeReason,
+									kind: "warn",
+									tip: "Requested by Manager",
+								},
+						  ]
+						: [];
+					$("#lane-hr").append(
+						cardTemplate("Draft Request", [...baseMeta, ...note], [])
+					);
+				}
+
+				if (state.status === "Pending Approval") {
+					const c = cardTemplate(
+						"Pending Approval",
+						[
+							...baseMeta,
+							{ text: "Gateway", kind: "warn", tip: "Approve/Request changes" },
+						],
+						[
+							{ id: "btnApprove", label: "Approve", kind: "primary" },
+							{
+								id: "btnReqChange",
+								label: "Request Changes",
+								kind: "secondary",
+								title: "Request changes with reason",
+							},
+						]
+					);
+					$("#lane-manager").append(c);
+				}
+
+				if (
+					["In IT/Finance", "Orientation", "Completed"].includes(state.status)
+				) {
+					// IT
+					const it = el("div", { className: "onboard-card" });
+					it.append(
+						el("div", {
+							textContent: "IT Checklist",
+							style: "font-weight:700;margin-bottom:6px",
+						})
+					);
+					["Create account", "Assign laptop", "Grant system access"].forEach(
+						(t, i) => {
+							const row = el("label", { className: "check" });
+							const cb = el("input", {
+								type: "checkbox",
+								checked: state.it.tasks[i],
+								"data-area": "it",
+								"data-idx": i,
+								ariaLabel: `IT Task ${i + 1}: ${t}`,
+								tabIndex: 0,
+							});
+							row.append(cb, el("span", { textContent: t }));
+							it.append(row);
+						}
+					);
+					const itMeta = el("div", { className: "meta" });
+					if (state.it.done)
+						itMeta.append(
+							el("span", { className: "badge ok", textContent: "IT Approved" })
+						);
+					const itActions = el("div", { className: "actions" });
+					const itApprove = el("button", {
+						className: "btn success",
+						id: "btnITDone",
+						textContent: state.it.done ? "IT Done ✓" : "Approve IT",
+						disabled: !laneAllChecked("it") || state.it.done,
+						title: "Mark IT lane completed",
+					});
+					itActions.append(itApprove);
+					it.append(itMeta, itActions);
+					$("#lane-it").append(it);
+
+					// Finance
+					const fi = el("div", { className: "onboard-card" });
+					fi.append(
+						el("div", {
+							textContent: "Finance Checklist",
+							style: "font-weight:700;margin-bottom:6px",
+						})
+					);
+					["Add to payroll", "Tax form", "Bank account verification"].forEach(
+						(t, i) => {
+							const row = el("label", { className: "check" });
+							const cb = el("input", {
+								type: "checkbox",
+								checked: state.finance.tasks[i],
+								"data-area": "finance",
+								"data-idx": i,
+								ariaLabel: `Finance Task ${i + 1}: ${t}`,
+								tabIndex: 0,
+							});
+							row.append(cb, el("span", { textContent: t }));
+							fi.append(row);
+						}
+					);
+					const fiMeta = el("div", { className: "meta" });
+					if (state.finance.done)
+						fiMeta.append(
+							el("span", {
+								className: "badge ok",
+								textContent: "Finance Approved",
+							})
+						);
+					const fiActions = el("div", { className: "actions" });
+					const fiApprove = el("button", {
+						className: "btn success",
+						id: "btnFINDone",
+						textContent: state.finance.done
+							? "Finance Done ✓"
+							: "Approve Finance",
+						disabled: !laneAllChecked("finance") || state.finance.done,
+						title: "Mark Finance lane completed",
+					});
+					fiActions.append(fiApprove);
+					fi.append(fiMeta, fiActions);
+					$("#lane-finance").append(fi);
+				}
+
+				if (["Orientation", "Completed"].includes(state.status)) {
+					const enabled = bothLanesDone();
+					const meta = [
+						{
+							text: enabled ? "Enabled" : "Waiting Parallel",
+							kind: enabled ? "ok" : "warn",
+						},
+					];
+					const box = cardTemplate("Orientation", meta, []);
+					const wrap = el("div");
+					const r1 = el("div", { className: "form-grid" });
+					const dt = el("input", {
+						type: "datetime-local",
+						id: "oriDT",
+						value: state.orientation.scheduledAt || "",
+						ariaLabel: "Orientation schedule",
+						title: "Set orientation date/time",
+						className: "full",
+					});
+					r1.append(dt);
+					wrap.append(r1);
+					const btns = el("div", { className: "actions" });
+					const schedule = el("button", {
+						className: "btn secondary",
+						id: "btnSchedule",
+						textContent: "Schedule Orientation",
+						disabled: !enabled,
+						title: "Set date/time",
+					});
+					const done = el("button", {
+						className: "btn primary",
+						id: "btnDone",
+						textContent: "Mark as Done",
+						disabled: !(enabled && state.orientation.scheduledAt),
+					});
+					btns.append(schedule, done);
+					wrap.append(btns);
+					box.append(wrap);
+					$("#lane-orientation").append(box);
+				}
+
+				if (state.status === "Completed") {
+					$("#lane-orientation").append(
+						cardTemplate(
+							"Onboarding Completed",
+							[{ text: "Completed", kind: "ok" }],
+							[]
+						)
+					);
+				}
+
+				// Proceed button visibility
+				$("#btnProceed").style.display =
+					state.status === "In IT/Finance" && bothLanesDone()
+						? "inline-flex"
+						: "none";
+			}
+
+			/* ===== Event Delegation (robust across re-renders) ===== */
+			document.addEventListener("change", (e) => {
+				const t = e.target;
+				// Checklist toggles
+				if (t && t.matches('input[type="checkbox"][data-area]')) {
+					const area = t.getAttribute("data-area");
+					const idx = +t.getAttribute("data-idx");
+					state[area].tasks[idx] = t.checked;
+					logEvent(area === "it" ? "IT" : "Finance", "Checklist", {
+						index: idx,
+						checked: t.checked,
+					});
+					save();
+					// Enable lane buttons accordingly
+					const itBtn = $("#btnITDone"),
+						fiBtn = $("#btnFINDone");
+					if (itBtn) itBtn.disabled = !laneAllChecked("it") || state.it.done;
+					if (fiBtn)
+						fiBtn.disabled = !laneAllChecked("finance") || state.finance.done;
+					renderRing();
+					// Auto show proceed if both lanes are complete (all tasks checked or approved)
+					$("#btnProceed").style.display =
+						state.status === "In IT/Finance" && bothLanesDone()
+							? "inline-flex"
+							: "none";
+				}
+			});
+
+			document.addEventListener("click", (e) => {
+				const t = e.target;
+				if (!t) return;
+
+				if (t.id === "btnApprove") {
+					state.manager.approvedAt = nowISO();
+					setStatus("In IT/Finance", "Approved → parallel IT & Finance");
+					logEvent("Manager", "Approve", {
+						approvedAt: state.manager.approvedAt,
+					});
+					save();
+					renderBoard();
+					return;
+				}
+
+				if (t.id === "btnReqChange") {
+					openModal();
+					return;
+				}
+
+				if (t.id === "btnITDone") {
+					if (!laneAllChecked("it")) return;
+					state.it.done = true;
+					logEvent("IT", "Approve Lane", { at: nowISO() });
+					save();
+					renderBoard();
+					if (state.status === "In IT/Finance" && bothLanesDone()) {
+						setStatus(
+							"Orientation",
+							"Parallel complete → schedule orientation"
+						);
+						logEvent("System", "Advance to Orientation", { when: nowISO() });
+						save();
+						renderBoard();
+					}
+					return;
+				}
+
+				if (t.id === "btnFINDone") {
+					if (!laneAllChecked("finance")) return;
+					state.finance.done = true;
+					logEvent("Finance", "Approve Lane", { at: nowISO() });
+					save();
+					renderBoard();
+					if (state.status === "In IT/Finance" && bothLanesDone()) {
+						setStatus(
+							"Orientation",
+							"Parallel complete → schedule orientation"
+						);
+						logEvent("System", "Advance to Orientation", { when: nowISO() });
+						save();
+						renderBoard();
+					}
+					return;
+				}
+
+				if (t.id === "btnProceed") {
+					if (state.status === "In IT/Finance" && bothLanesDone()) {
+						setStatus(
+							"Orientation",
+							"Parallel complete → schedule orientation"
+						);
+						logEvent("System", "Proceed Button → Orientation", {
+							when: nowISO(),
+						});
+						save();
+						renderBoard();
+					}
+					return;
+				}
+
+				if (t.id === "btnSchedule") {
+					let v = $("#oriDT").value;
+					if (!v) {
+						const d = new Date();
+						d.setDate(d.getDate() + 1);
+						d.setHours(9, 0, 0, 0);
+						const pad = (n) => String(n).padStart(2, "0");
+						v = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(
+							d.getDate()
+						)}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+						$("#oriDT").value = v;
+					}
+					state.orientation.scheduledAt = v;
+					logEvent("HR", "Schedule Orientation", { scheduledAt: v });
+					save();
+					const doneBtn = $("#btnDone");
+					if (doneBtn) doneBtn.disabled = !state.orientation.scheduledAt;
+					return;
+				}
+
+				if (t.id === "btnDone") {
+					if (!state.orientation.scheduledAt) return;
+					state.orientation.done = true;
+					setStatus("Completed", "All steps finished");
+					logEvent("HR", "Orientation Done", { at: nowISO() });
+					save();
+					renderBoard();
+					return;
+				}
+
+				if (t.id === "btnDraft") {
+					readFormIntoState();
+					setStatus("Draft", "Draft saved");
+					logEvent("HR", "Save Draft", { when: nowISO() });
+					save();
+					renderBoard();
+					return;
+				}
+
+				if (t.id === "btnSubmit") {
+					const formEmail = $("#empEmail").value.trim();
+					const isNewEmployee = state.card.email !== formEmail;
+					readFormIntoState();
+					if (!state.requestId || isNewEmployee) {
+						state.requestId = genId();
+						setStatus("Pending Approval", "Submitted to Manager");
+						logEvent("HR", "Submit", { requestId: state.requestId });
+					} else {
+						if (!["Draft", "Changes Requested"].includes(state.status)) {
+							logEvent("System", "Submit Ignored (idempotent)", {
+								requestId: state.requestId,
+								status: state.status,
+							});
+						} else {
+							setStatus("Pending Approval", "Submitted to Manager");
+							logEvent("HR", "Submit (existing requestId)", {
+								requestId: state.requestId,
+							});
+						}
+					}
+					save();
+					renderBoard();
+					return;
+				}
+
+				if (t.id === "modalCancel") {
+					closeModal();
+					return;
+				}
+				if (t.id === "modalOk") {
+					state.manager.changeReason =
+						$("#changeReason").value || "(no reason provided)";
+					setStatus("Changes Requested", "Back to HR for changes");
+					logEvent("Manager", "Request Changes", {
+						reason: state.manager.changeReason,
+					});
+					save();
+					renderBoard();
+					closeModal();
+					return;
+				}
+			});
+
+			/* ===== Modal helpers ===== */
+			function openModal() {
+				$("#modal").hidden = false;
+				$("#modalWrap").setAttribute("aria-hidden", "false");
+				$("#changeReason").value = state.manager.changeReason || "";
+				$("#changeReason").focus();
+			}
+			function closeModal() {
+				$("#modal").hidden = true;
+				$("#modalWrap").setAttribute("aria-hidden", "true");
+			}
+			window.addEventListener("keydown", (e) => {
+				if (e.key === "Escape" && $("#modal") && !$("#modal").hidden)
+					closeModal();
+			});
+
+			/* ===== Form read ===== */
+			function readFormIntoState() {
+				state.card.name = $("#empName").value.trim();
+				state.card.email = $("#empEmail").value.trim();
+				state.card.position = $("#empPos").value.trim();
+				state.card.startDate = $("#empDate").value;
+				state.card.manager = $("#empMgr").value.trim();
+				state.card.notes = $("#empNotes").value.trim();
+			}
+
+			/* ===== Reset ===== */
+			$("#btnReset").addEventListener("click", () => {
+				localStorage.removeItem(LS_STATE);
+				localStorage.removeItem(LS_AUDIT);
+				location.reload();
+			});
+
+			/* ===== Boot ===== */
+			function boot() {
+				// Form seed
+				$("#empName").value = state.card.name || "";
+				$("#empEmail").value = state.card.email || "";
+				$("#empPos").value = state.card.position || "";
+				$("#empDate").value = state.card.startDate || "";
+				$("#empMgr").value = state.card.manager || "";
+				$("#empNotes").value = state.card.notes || "";
+				const map = {
+					Draft: "Draft",
+					"Pending Approval": "Pending Approval",
+					"In IT/Finance": "In IT/Finance",
+					Orientation: "Orientation",
+					"Changes Requested": "Draft (changes requested)",
+					Completed: "Completed",
+				};
+				setStatus(map[state.status] ? state.status : "Draft");
+				renderAudit();
+				renderBoard();
+			}
+			boot();
+		</script>
+	</body>
+</html>

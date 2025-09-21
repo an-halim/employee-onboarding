@@ -1,0 +1,33 @@
+{
+  "name": "deals",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/an-halim/employee-onboarding.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/an-halim/employee-onboarding/issues"
+  },
+  "homepage": "https://github.com/an-halim/employee-onboarding#readme",
+  "dependencies": {
+    "fetch-cookie": "^3.1.0",
+    "node-fetch": "^3.3.2",
+    "tough-cookie": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

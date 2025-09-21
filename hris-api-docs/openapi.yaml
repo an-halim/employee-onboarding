@@ -1,0 +1,2705 @@
+openapi: 3.0.0
+info:
+  title: HRIS KantorKu
+  version: 1.0.0
+  description: >-
+    OpenAPI spec for HRIS KantorKu
+paths:
+  /v2/hris/bank-account-validation/supported-bank/list:
+    get:
+      description: ''
+      operationId: getV2HrisBankAccountValidationSupportedBankList
+      parameters:
+        
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                - bankCode: bank_ibk
+                  bankName: Bank IBK
+                - bankCode: bank_jatim
+                  bankName: Bank Jatim
+                - bankCode: bank_ocbc_nisp
+                  bankName: Bank OCBC NISP
+                - bankCode: bpd_sultra
+                  bankName: BPD Sultra
+                - bankCode: bag_internasional
+                  bankName: Bank Artha Graha Internasional
+                - bankCode: bank_mandiri
+                  bankName: Bank Mandiri
+                - bankCode: bank_mas
+                  bankName: Bank MAS
+                - bankCode: bank_ocbc_nisp_uus
+                  bankName: Bank OCBC NISP UUS
+                - bankCode: bank_sulselbar_uus
+                  bankName: Bank Sulselbar UUS
+                - bankCode: bank_victoria_syariah
+                  bankName: Bank Victoria Syariah
+                - bankCode: bba
+                  bankName: Bank Bumi Arta
+                - bankCode: bnp_paribas
+                  bankName: BNP Paribas
+                - bankCode: bank_maluku
+                  bankName: Bank Maluku
+                - bankCode: panin_bank
+                  bankName: Panin Bank
+                - bankCode: bpd_kalteng
+                  bankName: BPD Kalteng
+                - bankCode: bank_mizuho
+                  bankName: Bank Mizuho
+                - bankCode: bank_icbc
+                  bankName: Bank ICBC
+                - bankCode: bank_maybank_uus
+                  bankName: Bank Maybank UUS
+                - bankCode: bank_capital
+                  bankName: Bank Capital
+                - bankCode: bpd_sumsel_babel_uus
+                  bankName: BPD Sumsel Babel UUS
+                - bankCode: ctbc_indonesia
+                  bankName: CTBC Indonesia
+                - bankCode: bank_shinhan_indonesia
+                  bankName: Bank Shinhan Indonesia
+                - bankCode: bank_of_india_indonesia
+                  bankName: Bank Of India Indonesia
+                - bankCode: bpd_sumsel_babel
+                  bankName: BPD Sumsel Babel
+                - bankCode: bank_commonwealth
+                  bankName: Bank Commonwealth
+                - bankCode: bank_jago_uus
+                  bankName: Bank Jago UUS
+                - bankCode: bank_bpd_diy_uus
+                  bankName: Bank BPD DIY UUS
+                - bankCode: bank_btpn_syariah
+                  bankName: Bank BTPN Syariah
+                - bankCode: bank_sumut
+                  bankName: Bank Sumut
+                - bankCode: bank_bengkulu
+                  bankName: Bank Bengkulu
+                - bankCode: bank_bjb_syariah
+                  bankName: Bank BJB Syariah
+                - bankCode: bank_maspion
+                  bankName: Bank Maspion
+                - bankCode: bank_nagari_uus
+                  bankName: Bank Nagari UUS
+                - bankCode: bank_permata
+                  bankName: Bank Permata
+                - bankCode: bank_victoria
+                  bankName: Bank Victoria
+                - bankCode: bank_ganesha
+                  bankName: Bank Ganesha
+                - bankCode: bca
+                  bankName: BCA
+                - bankCode: boa
+                  bankName: Bank of America NA
+                - bankCode: bpd_banten
+                  bankName: BPD Banten
+                - bankCode: bpd_kaltimtara_uus
+                  bankName: BPD Kaltimtara UUS
+                - bankCode: mufg
+                  bankName: Bank MUFG
+                - bankCode: btpn
+                  bankName: BTPN
+                - bankCode: stanchart
+                  bankName: Stanchart
+                - bankCode: bank_amar
+                  bankName: Bank Amar
+                - bankCode: bank_danamon_uus
+                  bankName: Bank Danamon UUS
+                - bankCode: bank_bni
+                  bankName: Bank BNI
+                - bankCode: bank_cimb
+                  bankName: Bank CIMB
+                - bankCode: bank_mestika
+                  bankName: Bank Mestika
+                - bankCode: bank_sbi
+                  bankName: Bank SBI
+                - bankCode: bpd_kaltimtara
+                  bankName: BPD Kaltimtara
+                - bankCode: bank_nagari
+                  bankName: Bank Nagari
+                - bankCode: bank_bsi
+                  bankName: Bank BSI
+                - bankCode: anz_indonesia
+                  bankName: ANZ Indonesia
+                - bankCode: bukopin
+                  bankName: Bukopin
+                - bankCode: bank_permata_uus
+                  bankName: Bank Permata UUS
+                - bankCode: mnc_bank
+                  bankName: MNC Bank
+                - bankCode: bank_mega
+                  bankName: Bank Mega
+                - bankCode: bank_sulselbar
+                  bankName: Bank Sulselbar
+                - bankCode: bpd_kalsel_uus
+                  bankName: BPD Kalsel UUS
+                - bankCode: bank_sinarmas_uus
+                  bankName: Bank Sinarmas UUS
+                - bankCode: bank_cimb_niaga_uus
+                  bankName: Bank CIMB Niaga UUS
+                - bankCode: bank_keb_hana
+                  bankName: Bank KEB Hana
+                - bankCode: bank_panin_dubai_syariah
+                  bankName: Bank Panin Dubai Syariah
+                - bankCode: bri
+                  bankName: BRI
+                - bankCode: citibank
+                  bankName: Citibank
+                - bankCode: bank_raya
+                  bankName: Bank Raya (BRI Agro)
+                - bankCode: bank_muamalat
+                  bankName: Bank Muamalat
+                - bankCode: bpd_kalbar
+                  bankName: BPD Kalbar
+                - bankCode: bpd_sumut_uus
+                  bankName: BPD Sumut UUS
+                - bankCode: bank_bca_syariah
+                  bankName: Bank BCA Syariah
+                - bankCode: bank_qnb
+                  bankName: Bank QNB
+                - bankCode: bpd_ntt
+                  bankName: BPD NTT
+                - bankCode: btn
+                  bankName: BTN
+                - bankCode: bank_jatim_uus
+                  bankName: Bank Jatim UUS
+                - bankCode: bank_dki
+                  bankName: Bank DKI
+                - bankCode: bank_seabank
+                  bankName: Bank Seabank
+                - bankCode: bank_resona
+                  bankName: Bank Resona
+                - bankCode: bpd_kalbar_uus
+                  bankName: BPD Kalbar UUS
+                - bankCode: bpd_papua
+                  bankName: BPD Papua
+                - bankCode: deutsche_bank
+                  bankName: Deutsche Bank
+                - bankCode: jpmorgan_bank
+                  bankName: JPMorgan Bank
+                - bankCode: bank_oke
+                  bankName: Bank Oke
+                - bankCode: bank_aladin_syariah
+                  bankName: Bank Aladin Syariah
+                - bankCode: bank_bpd_diy
+                  bankName: Bank BPD DIY
+                - bankCode: bank_ina
+                  bankName: Bank Ina
+                - bankCode: bank_mandiri_taspen
+                  bankName: Bank Mandiri Taspen
+                - bankCode: boc_limited
+                  bankName: Bank of China (Hong Kong)
+                - bankCode: bpd_sulteng
+                  bankName: BPD Sulteng
+                - bankCode: uob_indonesia
+                  bankName: UOB Indonesia
+                - bankCode: bank_jago
+                  bankName: Bank Jago
+                - bankCode: bank_index
+                  bankName: Bank Index
+                - bankCode: bank_jtrust
+                  bankName: Bank JTrust
+                - bankCode: bank_danamon
+                  bankName: Bank Danamon
+                - bankCode: bank_maybank
+                  bankName: Bank Maybank
+                - bankCode: bank_neo_commerce
+                  bankName: Bank Neo Commerce
+                - bankCode: bi
+                  bankName: Bank Indonesia
+                - bankCode: bpd_kalsel
+                  bankName: BPD Kalsel
+                - bankCode: bank_jateng_uus
+                  bankName: Bank Jateng UUS
+                - bankCode: bank_kb_bukopin_syariah
+                  bankName: Bank KB Bukopin Syariah
+                - bankCode: bpd_sulut
+                  bankName: BPD Sulut
+                - bankCode: btn_uus
+                  bankName: BTN UUS
+                - bankCode: bank_dki_uus
+                  bankName: Bank DKI UUS
+                - bankCode: bpd_riau_kepri_syariah
+                  bankName: BPD Riau Kepri Syariah
+                - bankCode: bpd_bali
+                  bankName: BPD Bali
+                - bankCode: bpd_jambi_uus
+                  bankName: BPD Jambi UUS
+                - bankCode: bank_bjb
+                  bankName: Bank BJB
+                - bankCode: bank_jasa_jakarta
+                  bankName: Bank Jasa Jakarta
+                - bankCode: bank_jateng
+                  bankName: Bank Jateng
+                - bankCode: bank_hibank
+                  bankName: Bank Hibank
+                - bankCode: bank_aceh
+                  bankName: Bank Aceh
+                - bankCode: bank_lampung
+                  bankName: Bank Lampung
+                - bankCode: bank_hsbc_indonesia
+                  bankName: Bank HSBC Indonesia
+                - bankCode: dbs
+                  bankName: DBS
+                - bankCode: bank_allo
+                  bankName: Bank Allo
+                - bankCode: bank_mayapada
+                  bankName: Bank Mayapada
+                - bankCode: bank_digital_bca
+                  bankName: Bank Digital BCA
+                - bankCode: bpd_jambi
+                  bankName: BPD Jambi
+                - bankCode: krom_bank
+                  bankName: Krom Bank
+                - bankCode: bank_sampoerna
+                  bankName: Bank Sampoerna
+                - bankCode: bank_mega_syariah
+                  bankName: Bank Mega Syariah
+                - bankCode: bank_nationalnobu
+                  bankName: Bank Nationalnobu
+                - bankCode: bpd_ntb_syariah
+                  bankName: BPD NTB Syariah
+                - bankCode: super_bank
+                  bankName: Super Bank
+                - bankCode: bank_woori_saudara
+                  bankName: Bank Woori Saudara
+                - bankCode: china_construction_bank
+                  bankName: China Construction Bank
+                - bankCode: bank_sinarmas
+                  bankName: Bank Sinarmas
+              schema:
+                items:
+                  additionalProperties: false
+                  properties:
+                    bankCode:
+                      type: string
+                    bankName:
+                      type: string
+                  required: []
+                  title: >-
+                    V2HrisBankAccountValidationSupportedBankListGetRequestElement
+                  type: object
+                type: array
+          description: ''
+      summary: Get V 2 Hris Bank Account Validation Supported Bank List
+    parameters: []
+  /v2/hris/benefit/list:
+    get:
+      description: ''
+      operationId: getV2HrisBenefitList
+      parameters:
+        - description: company_id_eq
+          in: query
+          name: company_id_eq
+          schema:
+            default: 4a358946-3e84-4d55-a586-07c848bababb
+            example: 4a358946-3e84-4d55-a586-07c848bababb
+            type: string
+        - description: search
+          in: query
+          name: search
+          schema:
+            default: ''
+            example: ''
+            type: string
+        - description: limit
+          in: query
+          name: limit
+          schema:
+            default: '2'
+            example: '2'
+            type: string
+        
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  docs:
+                    - absentProrate: false
+                      companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                      createdAt: '2025-09-21T00:54:59.485194+07:00'
+                      id: 33c29f51-8d24-4619-8fc4-a63e08f4615d
+                      jointHolidayProrate: true
+                      nationalHolidayProrate: true
+                      paidLeaveProrates: null
+                      prorate: true
+                      taxable: true
+                      type: trest
+                      unpaidLeaveProrate: false
+                      updatedAt: '2025-09-21T00:54:59.485194+07:00'
+                      version: 1
+                    - absentProrate: false
+                      companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                      createdAt: '2024-07-17T20:36:22.47049+07:00'
+                      id: 620c6d6e-6e72-480c-93e1-b4a19da3e8f8
+                      jointHolidayProrate: false
+                      nationalHolidayProrate: false
+                      paidLeaveProrates: null
+                      prorate: true
+                      taxable: true
+                      type: Transportation allowance
+                      unpaidLeaveProrate: true
+                      updatedAt: '2024-07-17T20:36:22.47049+07:00'
+                      version: 1
+                    - absentProrate: false
+                      companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                      createdAt: '2024-07-17T20:36:33.588541+07:00'
+                      id: 787c4408-248b-4530-9dc4-23754cb994b1
+                      jointHolidayProrate: false
+                      nationalHolidayProrate: false
+                      paidLeaveProrates: null
+                      prorate: true
+                      taxable: true
+                      type: Learning Allowance
+                      unpaidLeaveProrate: true
+                      updatedAt: '2024-07-17T20:36:33.588541+07:00'
+                      version: 1
+                    - absentProrate: false
+                      companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                      createdAt: '2024-07-17T20:36:41.391809+07:00'
+                      id: dbf02a4a-aab8-4745-a73a-29c55b0e6958
+                      jointHolidayProrate: false
+                      nationalHolidayProrate: false
+                      paidLeaveProrates: null
+                      prorate: true
+                      taxable: true
+                      type: Internet Allowance
+                      unpaidLeaveProrate: true
+                      updatedAt: '2024-07-17T20:36:41.391809+07:00'
+                      version: 1
+                info: Success
+                messageId: SUCCESS
+                requestId: d7f6af51-0293-494e-9d34-0fd3102a92d2
+                traceId: a5847cf8ba7f698089645c38f52b7f37
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      docs:
+                        items:
+                          additionalProperties: false
+                          properties:
+                            absentProrate:
+                              type: boolean
+                            companyId:
+                              format: uuid
+                              type: string
+                            createdAt:
+                              format: date-time
+                              type: string
+                            id:
+                              format: uuid
+                              type: string
+                            jointHolidayProrate:
+                              type: boolean
+                            nationalHolidayProrate:
+                              type: boolean
+                            paidLeaveProrates:
+                              nullable: true
+                            prorate:
+                              type: boolean
+                            taxable:
+                              type: boolean
+                            type:
+                              enum:
+                                - Transportation allowance
+                                - Learning Allowance
+                                - Internet Allowance
+                                - trest
+                              title: Type
+                              type: string
+                            unpaidLeaveProrate:
+                              type: boolean
+                            updatedAt:
+                              format: date-time
+                              type: string
+                            version:
+                              type: integer
+                          required: []
+                          title: Doc
+                          type: object
+                        type: array
+                    required: []
+                    title: Data
+                    type: object
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisBenefitListGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Benefit List
+    parameters: []
+  /v2/hris/benefit/one:
+    parameters: []
+    post:
+      description: ''
+      operationId: postV2HrisBenefitOne
+      parameters:
+        
+      requestBody:
+        content:
+          application/json:
+            example:
+              absentProrate: false
+              companyId: 4a358946-3e84-4d55-a586-07c848bababb
+              jointHolidayProrate: true
+              nationalHolidayProrate: true
+              prorate: true
+              taxable: true
+              type: trest
+              unpaidLeaveProrate: false
+            schema:
+              additionalProperties: false
+              properties:
+                absentProrate:
+                  type: boolean
+                companyId:
+                  format: uuid
+                  type: string
+                jointHolidayProrate:
+                  type: boolean
+                nationalHolidayProrate:
+                  type: boolean
+                prorate:
+                  type: boolean
+                taxable:
+                  type: boolean
+                type:
+                  type: string
+                unpaidLeaveProrate:
+                  type: boolean
+              required: []
+              title: V2HrisBenefitOnePostRequest
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  doc:
+                    absentProrate: false
+                    companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                    createdAt: '2025-09-21T00:54:59.48519414+07:00'
+                    id: 33c29f51-8d24-4619-8fc4-a63e08f4615d
+                    jointHolidayProrate: true
+                    nationalHolidayProrate: true
+                    paidLeaveProrates: null
+                    prorate: true
+                    taxable: true
+                    type: trest
+                    unpaidLeaveProrate: false
+                    updatedAt: '2025-09-21T00:54:59.48519414+07:00'
+                    version: 1
+                info: Success
+                messageId: SUCCESS
+                requestId: 75a5bf08-b12c-44e6-a958-eefcbf137b39
+                traceId: 1abe5c09c21a72db8a6de546b04d8434
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      doc:
+                        additionalProperties: false
+                        properties:
+                          absentProrate:
+                            type: boolean
+                          companyId:
+                            format: uuid
+                            type: string
+                          createdAt:
+                            format: date-time
+                            type: string
+                          id:
+                            format: uuid
+                            type: string
+                          jointHolidayProrate:
+                            type: boolean
+                          nationalHolidayProrate:
+                            type: boolean
+                          paidLeaveProrates:
+                            nullable: true
+                          prorate:
+                            type: boolean
+                          taxable:
+                            type: boolean
+                          type:
+                            type: string
+                          unpaidLeaveProrate:
+                            type: boolean
+                          updatedAt:
+                            format: date-time
+                            type: string
+                          version:
+                            type: integer
+                        required: []
+                        title: Doc
+                        type: object
+                    required: []
+                    title: Data
+                    type: object
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisBenefitOnePostRequest
+                type: object
+          description: ''
+      summary: Post V 2 Hris Benefit One
+  /v2/hris/company-unit-item/list:
+    get:
+      description: ''
+      operationId: getV2HrisCompanyUnitItemList
+      parameters:
+        - description: skip
+          in: query
+          name: skip
+          schema:
+            default: '0'
+            example: '0'
+            type: string
+        - description: limit
+          in: query
+          name: limit
+          schema:
+            default: '21'
+            example: '21'
+            type: string
+        - description: company_id_eq
+          in: query
+          name: company_id_eq
+          schema:
+            default: 4a358946-3e84-4d55-a586-07c848bababb
+            example: 4a358946-3e84-4d55-a586-07c848bababb
+            type: string
+        - description: search
+          in: query
+          name: search
+          schema:
+            default: ''
+            example: ''
+            type: string
+        - description: company_unit_id_eq
+          in: query
+          name: company_unit_id_eq
+          schema:
+            default: e37a30ce-33c8-4824-bd56-0fc4a77d431d
+            example: e37a30ce-33c8-4824-bd56-0fc4a77d431d
+            type: string
+        - description: with
+          in: query
+          name: with
+          schema:
+            default: default_shift
+            example: default_shift
+            type: string
+        - description: sort
+          in: query
+          name: sort
+          schema:
+            default: default_shift
+            example: default_shift
+            type: string
+        
+        - description: parent_id_isnull
+          in: query
+          name: parent_id_isnull
+          schema:
+            default: 'true'
+            example: 'true'
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  docs: []
+                messageId: SUCCESS
+                requestId: ''
+                traceId: 3813879e4c7c196670323c3bab065fd5
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      docs:
+                        items:
+                          additionalProperties: false
+                          properties:
+                            code:
+                              enum:
+                                - '001'
+                                - ''
+                                - PRD
+                                - ENG
+                                - SLS
+                              title: Code
+                              type: string
+                            companyUnitId:
+                              format: uuid
+                              type: string
+                            createdAt:
+                              format: date-time
+                              type: string
+                            employeeCount:
+                              type: integer
+                            haveDefaultShift:
+                              type: boolean
+                            id:
+                              format: uuid
+                              type: string
+                            note:
+                              type: string
+                            parentId:
+                              nullable: true
+                            updatedAt:
+                              format: date-time
+                              type: string
+                            value:
+                              type: string
+                          required: []
+                          title: Doc
+                          type: object
+                        type: array
+                    required: []
+                    title: Data
+                    type: object
+                  messageId:
+                    type: string
+                  requestId:
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisCompanyUnitItemListGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Company Unit Item List
+    parameters: []
+  /v2/hris/company-unit/list:
+    get:
+      description: ''
+      operationId: getV2HrisCompanyUnitList
+      parameters:
+        - description: company_id_eq
+          in: query
+          name: company_id_eq
+          schema:
+            default: 4a358946-3e84-4d55-a586-07c848bababb
+            example: 4a358946-3e84-4d55-a586-07c848bababb
+            type: string
+        - description: sort
+          in: query
+          name: sort
+          schema:
+            default: created_at
+            example: created_at
+            type: string
+        
+        - description: id_eq
+          in: query
+          name: id_eq
+          schema:
+            default: f051811b-7a32-4994-ac03-8a8b5c06abde
+            example: f051811b-7a32-4994-ac03-8a8b5c06abde
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  docs:
+                    - companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                      createdAt: '2025-09-20T09:48:11.641885+07:00'
+                      deletable: true
+                      description: null
+                      id: f051811b-7a32-4994-ac03-8a8b5c06abde
+                      label: Sub Area
+                      name: Sub Area
+                      order: 5
+                      updatedAt: '2025-09-20T09:48:11.641885+07:00'
+                messageId: SUCCESS
+                requestId: ''
+                traceId: 1df3d5d43dd8283e0e4dc967f28e39f9
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      docs:
+                        items:
+                          additionalProperties: false
+                          properties:
+                            companyId:
+                              format: uuid
+                              type: string
+                            createdAt:
+                              format: date-time
+                              type: string
+                            deletable:
+                              type: boolean
+                            description:
+                              anyOf:
+                                - nullable: true
+                                  type: string
+                            id:
+                              format: uuid
+                              type: string
+                            label:
+                              type: string
+                            name:
+                              type: string
+                            order:
+                              type: integer
+                            updatedAt:
+                              format: date-time
+                              type: string
+                          required: []
+                          title: Doc
+                          type: object
+                        type: array
+                    required: []
+                    title: Data
+                    type: object
+                  messageId:
+                    type: string
+                  requestId:
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisCompanyUnitListGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Company Unit List
+    parameters: []
+  /v2/hris/company/custom-employee-data/list:
+    get:
+      description: ''
+      operationId: getV2HrisCompanyCustomEmployeeDataList
+      parameters:
+        - description: company_id_eq
+          in: query
+          name: company_id_eq
+          schema:
+            default: 4a358946-3e84-4d55-a586-07c848bababb
+            example: 4a358946-3e84-4d55-a586-07c848bababb
+            type: string
+        - description: limit
+          in: query
+          name: limit
+          schema:
+            default: '20'
+            example: '20'
+            type: string
+        
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  docs: []
+                info: Success
+                messageId: SUCCESS
+                requestId: dcf6af51-0293-494e-9d34-0fd3102a92d2
+                traceId: 67c57ba07a07070388165cd9727a4b5c
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      docs:
+                        items: {}
+                        type: array
+                    required: []
+                    title: Data
+                    type: object
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisCompanyCustomEmployeeDataListGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Company Custom Employee Data List
+    parameters: []
+  /v2/hris/company/document-type/list:
+    get:
+      description: ''
+      operationId: getV2HrisCompanyDocumentTypeList
+      parameters:
+        - description: company_id_eq
+          in: query
+          name: company_id_eq
+          schema:
+            default: 4a358946-3e84-4d55-a586-07c848bababb
+            example: 4a358946-3e84-4d55-a586-07c848bababb
+            type: string
+        - description: status_eq
+          in: query
+          name: status_eq
+          schema:
+            default: available
+            example: available
+            type: string
+        
+        - description: sort
+          in: query
+          name: sort
+          schema:
+            default: name
+            example: name
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  docs:
+                    - companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                      createdAt: '2025-01-24T18:34:47.126465+07:00'
+                      forRequisiterequisite: cv
+                      id: bba7e057-0d1d-4b1a-ac20-bc79902c8b16
+                      name: CV
+                      requirements: optional
+                      status: available
+                      updatedAt: '2025-01-24T18:34:47.126465+07:00'
+                    - companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                      createdAt: '2025-01-24T18:34:47.126465+07:00'
+                      forRequisiterequisite: identity
+                      id: 8595e504-6649-4cf5-afed-b5bdeda06cb5
+                      name: KTP/ID
+                      requirements: optional
+                      status: available
+                      updatedAt: '2025-01-24T18:34:47.126465+07:00'
+                info: Success
+                messageId: SUCCESS
+                requestId: 7aa5bf08-b12c-44e6-a958-eefcbf137b39
+                traceId: f39c1b98418b2d0332d57fbdd7ce76d1
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      docs:
+                        items:
+                          additionalProperties: false
+                          properties:
+                            companyId:
+                              format: uuid
+                              type: string
+                            createdAt:
+                              format: date-time
+                              type: string
+                            forRequisiterequisite:
+                              type: string
+                            id:
+                              format: uuid
+                              type: string
+                            name:
+                              type: string
+                            requirements:
+                              type: string
+                            status:
+                              type: string
+                            updatedAt:
+                              format: date-time
+                              type: string
+                          required: []
+                          title: Doc
+                          type: object
+                        type: array
+                    required: []
+                    title: Data
+                    type: object
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisCompanyDocumentTypeListGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Company Document Type List
+    parameters: []
+  /v2/hris/company/one:
+    get:
+      description: ''
+      operationId: getV2HrisCompanyOne
+      parameters:
+        - description: with
+          in: query
+          name: with
+          schema:
+            default: feature_list
+            example: feature_list
+            type: string
+        - description: id_eq
+          in: query
+          name: id_eq
+          schema:
+            default: 4a358946-3e84-4d55-a586-07c848bababb
+            example: 4a358946-3e84-4d55-a586-07c848bababb
+            type: string
+        
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  doc:
+                    address: null
+                    createdAt: '2024-03-20T18:56:37.397128+07:00'
+                    emailDomain: drop.rasyidridho.biz.id
+                    externalState:
+                      companyId: ''
+                      createdAt: '0001-01-01T00:00:00Z'
+                      setupSalarySetting: false
+                      updatedAt: '0001-01-01T00:00:00Z'
+                    featureList: null
+                    id: 4a358946-3e84-4d55-a586-07c848bababb
+                    legalName: null
+                    logo: >-
+                      https://cdn.sejutacita.id/65facef39e50c300135e6231/HrisCompanyLogo/73408ff4-6c3e-4590-8a53-fdb38b0817d9/26br.jpg
+                    name: PT IDES TEST
+                    npwp: null
+                    setupDone: true
+                    slug: drop-rasyidridho-biz-id
+                    subscriptionInfo:
+                      companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                      createdAt: '2025-07-14T10:22:41.600666+07:00'
+                      expiresDate: '2070-12-31'
+                      gracePeriodDate: '2071-01-07'
+                      gracePeriodInterval: 7
+                      id: ef0cf5c9-8bac-42ef-87fd-f5823c0265bb
+                      notes: ''
+                      startDate: '2020-01-01'
+                      status: active
+                      type: paid
+                      updatedAt: '2025-07-14T10:45:38.806843+07:00'
+                    updatedAt: '2024-03-20T19:05:38.89197+07:00'
+                    verified: false
+                    website: null
+                info: Success
+                messageId: SUCCESS
+                requestId: 69f7af51-0293-494e-9d34-0fd3102a92d2
+                traceId: c2bc720751eb948a65fac390cca40eb2
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      doc:
+                        additionalProperties: false
+                        properties:
+                          address:
+                            nullable: true
+                          createdAt:
+                            format: date-time
+                            type: string
+                          emailDomain:
+                            enum:
+                              - drop.rasyidridho.biz.id
+                            title: EmailDomain
+                            type: string
+                          externalState:
+                            additionalProperties: false
+                            properties:
+                              companyId:
+                                type: string
+                              createdAt:
+                                format: date-time
+                                type: string
+                              setupSalarySetting:
+                                type: boolean
+                              updatedAt:
+                                format: date-time
+                                type: string
+                            required: []
+                            title: ExternalState
+                            type: object
+                          featureList:
+                            anyOf:
+                              - items:
+                                  additionalProperties: false
+                                  properties:
+                                    enabled:
+                                      type: boolean
+                                    featureId:
+                                      format: uuid
+                                      type: string
+                                    featureLabel:
+                                      type: string
+                                    featureName:
+                                      type: string
+                                    id:
+                                      format: uuid
+                                      type: string
+                                    meta:
+                                      additionalProperties: false
+                                      properties:
+                                        disbursementMethods:
+                                          items:
+                                            enum:
+                                              - manual
+                                              - va
+                                            title: DisbursementMethod
+                                            type: string
+                                          type: array
+                                        maxEmployee:
+                                          type: integer
+                                        switchable:
+                                          type: boolean
+                                      required: []
+                                      title: Meta
+                                      type: object
+                                  required: []
+                                  title: FeatureList
+                                  type: object
+                                nullable: true
+                                type: array
+                          id:
+                            format: uuid
+                            type: string
+                          legalName:
+                            nullable: true
+                          logo:
+                            format: uri
+                            type: string
+                            x-qt-uri-extensions:
+                              - .jpg
+                            x-qt-uri-protocols:
+                              - https
+                          name:
+                            enum:
+                              - PT IDES TEST
+                            title: Name
+                            type: string
+                          npwp:
+                            nullable: true
+                          setupDone:
+                            type: boolean
+                          slug:
+                            enum:
+                              - drop-rasyidridho-biz-id
+                            title: Slug
+                            type: string
+                          subscriptionInfo:
+                            additionalProperties: false
+                            properties:
+                              companyId:
+                                type: string
+                              createdAt:
+                                format: date-time
+                                type: string
+                              expiresDate:
+                                type: string
+                              gracePeriodDate:
+                                type: string
+                              gracePeriodInterval:
+                                type: integer
+                              id:
+                                type: string
+                              notes:
+                                type: string
+                              startDate:
+                                type: string
+                              status:
+                                enum:
+                                  - ''
+                                  - active
+                                title: Status
+                                type: string
+                              type:
+                                enum:
+                                  - ''
+                                  - paid
+                                title: Type
+                                type: string
+                              updatedAt:
+                                format: date-time
+                                type: string
+                            required: []
+                            title: SubscriptionInfo
+                            type: object
+                          updatedAt:
+                            format: date-time
+                            type: string
+                          verified:
+                            type: boolean
+                          website:
+                            nullable: true
+                        required: []
+                        title: Doc
+                        type: object
+                    required: []
+                    title: Data
+                    type: object
+                  info:
+                    enum:
+                      - Success
+                    title: Info
+                    type: string
+                  messageId:
+                    enum:
+                      - SUCCESS
+                    title: MessageID
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisCompanyOneGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Company One
+    parameters: []
+  /v2/hris/employee/document/list:
+    get:
+      description: ''
+      operationId: getV2HrisEmployeeDocumentList
+      parameters:
+        - description: host_eq
+          in: query
+          name: host_eq
+          schema:
+            default: production-sejutacita-id
+            example: production-sejutacita-id
+            type: string
+        - description: path_eq
+          in: query
+          name: path_eq
+          schema:
+            default: >-
+              companies/4a358946-3e84-4d55-a586-07c848bababb/employee-documents/22f3eff0-14d5-451a-9f1a-50dea817e729/age.png
+            example: >-
+              companies/4a358946-3e84-4d55-a586-07c848bababb/employee-documents/22f3eff0-14d5-451a-9f1a-50dea817e729/age.png
+            type: string
+        - description: with
+          in: query
+          name: with
+          schema:
+            default: signed_url
+            example: signed_url
+            type: string
+        - description: company_id_eq
+          in: query
+          name: company_id_eq
+          schema:
+            default: 4a358946-3e84-4d55-a586-07c848bababb
+            example: 4a358946-3e84-4d55-a586-07c848bababb
+            type: string
+        
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  - companyDocumentTypeId: 8595e504-6649-4cf5-afed-b5bdeda06cb5
+                    companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                    createdAt: '2025-09-21T00:56:56.755538+07:00'
+                    deletedAt: null
+                    employeeId: null
+                    fullUrl: >-
+                      https://cdn.sejutacita.id/hris/companies/4a358946-3e84-4d55-a586-07c848bababb/employee-documents/22f3eff0-14d5-451a-9f1a-50dea817e729/age.png
+                    host: production-sejutacita-id
+                    path: >-
+                      companies/4a358946-3e84-4d55-a586-07c848bababb/employee-documents/22f3eff0-14d5-451a-9f1a-50dea817e729/age.png
+                    requisite: company_document_type
+                    signedUrl: >-
+                      https://storage.googleapis.com/production-sejutacita-id/hris/companies/4a358946-3e84-4d55-a586-07c848bababb/employee-documents/22f3eff0-14d5-451a-9f1a-50dea817e729/age.png?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=upload-prod-sejutacita-id%40sejutacita-app.iam.gserviceaccount.com%2F20250920%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20250920T175657Z&X-Goog-Expires=3599&X-Goog-Signature=739be35f9f404ddf80da951ef62c53c0ff60d1f20a67473feba139b786f1a87bc20d59bbfd3241296dea7b0fa2db7bf41b5aa867e3b8b2f78a6ddbe1f898c0d25aa60fb80524d4ebc43084240a37076c8f63bd4fac2d0040a4b1c6fa08c2d92073a64b13cc257117d700ca591022d79e263522c48e7e3b156d3aa00bd494113f1760331c6e242de0dbc3ad834ca4f4b22aa38be2aa06b6e279b9a931de3ab5ad893dce58a3fa7b1f4929923f5205640bde37f21a47e7ff77b6cc7cc3379fc36b550a6f4e950d3845589a5b0cda3b2298567d5fad7c927a6da78a6ed20b9487ddcc77fd83ae4d6739061810731a1fbe5b8c94edd91a3be83e2d8d042d2f72b336&X-Goog-SignedHeaders=host
+                    status: new
+                    updatedAt: '2025-09-21T00:56:56.755538+07:00'
+                info: Success
+                messageId: SUCCESS
+                requestId: 1ff7af51-0293-494e-9d34-0fd3102a92d2
+                traceId: 623cd0f63c13c52ea37c67119e9207e2
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    items:
+                      additionalProperties: false
+                      properties:
+                        companyDocumentTypeId:
+                          format: uuid
+                          type: string
+                        companyId:
+                          format: uuid
+                          type: string
+                        createdAt:
+                          format: date-time
+                          type: string
+                        deletedAt:
+                          nullable: true
+                        employeeId:
+                          nullable: true
+                        fullUrl:
+                          format: uri
+                          type: string
+                          x-qt-uri-extensions:
+                            - .png
+                          x-qt-uri-protocols:
+                            - https
+                        host:
+                          type: string
+                        path:
+                          type: string
+                        requisite:
+                          type: string
+                        signedUrl:
+                          format: uri
+                          type: string
+                          x-qt-uri-extensions:
+                            - .png
+                          x-qt-uri-protocols:
+                            - https
+                        status:
+                          type: string
+                        updatedAt:
+                          format: date-time
+                          type: string
+                      required: []
+                      title: Datum
+                      type: object
+                    type: array
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisEmployeeDocumentListGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Employee Document List
+    parameters: []
+  /v2/hris/employee/document/one:
+    parameters: []
+    post:
+      description: ''
+      operationId: postV2HrisEmployeeDocumentOne
+      parameters:
+        
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                company_document_type_id:
+                  type: string
+                company_id:
+                  type: string
+                file:
+                  format: binary
+                  type: string
+              required:
+                - file
+                - company_document_type_id
+                - company_id
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  doc:
+                    companyDocumentTypeId: 8595e504-6649-4cf5-afed-b5bdeda06cb5
+                    companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                    createdAt: '2025-09-21T00:56:56.755538529+07:00'
+                    deletedAt: null
+                    employeeId: null
+                    fullUrl: >-
+                      https://cdn.sejutacita.id/hris/companies/4a358946-3e84-4d55-a586-07c848bababb/employee-documents/22f3eff0-14d5-451a-9f1a-50dea817e729/age.png
+                    host: production-sejutacita-id
+                    path: >-
+                      companies/4a358946-3e84-4d55-a586-07c848bababb/employee-documents/22f3eff0-14d5-451a-9f1a-50dea817e729/age.png
+                    requisite: company_document_type
+                    status: new
+                    updatedAt: '2025-09-21T00:56:56.755538759+07:00'
+                info: Success
+                messageId: SUCCESS
+                requestId: bba5bf08-b12c-44e6-a958-eefcbf137b39
+                traceId: a5f9811a4cb69e0fa49ea4a4c4a72e11
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      doc:
+                        additionalProperties: false
+                        properties:
+                          companyDocumentTypeId:
+                            format: uuid
+                            type: string
+                          companyId:
+                            format: uuid
+                            type: string
+                          createdAt:
+                            format: date-time
+                            type: string
+                          deletedAt:
+                            nullable: true
+                          employeeId:
+                            nullable: true
+                          fullUrl:
+                            format: uri
+                            type: string
+                            x-qt-uri-extensions:
+                              - .png
+                            x-qt-uri-protocols:
+                              - https
+                          host:
+                            type: string
+                          path:
+                            type: string
+                          requisite:
+                            type: string
+                          status:
+                            type: string
+                          updatedAt:
+                            format: date-time
+                            type: string
+                        required: []
+                        title: Doc
+                        type: object
+                    required: []
+                    title: Data
+                    type: object
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisEmployeeDocumentOnePostRequest
+                type: object
+          description: ''
+      summary: Post V 2 Hris Employee Document One
+  /v2/hris/employee/list:
+    get:
+      description: ''
+      operationId: getV2HrisEmployeeList
+      parameters:
+        - description: skip
+          in: query
+          name: skip
+          schema:
+            default: '0'
+            example: '0'
+            type: string
+        - description: limit
+          in: query
+          name: limit
+          schema:
+            default: '51'
+            example: '51'
+            type: string
+        - description: company_id_eq
+          in: query
+          name: company_id_eq
+          schema:
+            default: 4a358946-3e84-4d55-a586-07c848bababb
+            example: 4a358946-3e84-4d55-a586-07c848bababb
+            type: string
+        - description: employee_status_in
+          in: query
+          name: employee_status_in
+          schema:
+            default: active
+            example: active
+            type: string
+        - description: search
+          in: query
+          name: search
+          schema:
+            default: ''
+            example: ''
+            type: string
+        
+        - description: employee_code_eq
+          in: query
+          name: employee_code_eq
+          schema:
+            default: '21124312'
+            example: '21124312'
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  docs: []
+                info: Success
+                messageId: SUCCESS
+                requestId: ddf6af51-0293-494e-9d34-0fd3102a92d2
+                traceId: 4e218621c5ac874910400b6c91c28ca1
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      docs:
+                        items:
+                          additionalProperties: false
+                          properties:
+                            assignedToShift:
+                              type: boolean
+                            bankAccountHolder:
+                              enum:
+                                - Euklides Marima
+                                - Shopee Pay
+                                - Euklides MArima
+                              title: BankAccountHolder
+                              type: string
+                            bankAccountNumber:
+                              type: string
+                            bankName:
+                              type: string
+                            branch:
+                              enum:
+                                - Headquarter
+                                - Sumbagut
+                              title: Branch
+                              type: string
+                            branchId:
+                              format: uuid
+                              type: string
+                            companyEmail:
+                              type: string
+                            companyId:
+                              format: uuid
+                              type: string
+                            createdAt:
+                              format: date-time
+                              type: string
+                            customFieldName:
+                              nullable: true
+                            customFieldValues:
+                              nullable: true
+                            deletedAt:
+                              nullable: true
+                            department:
+                              enum:
+                                - Human Resources
+                                - Sales
+                                - Product
+                              title: Department
+                              type: string
+                            departmentId:
+                              format: uuid
+                              type: string
+                            directApprovalId:
+                              anyOf:
+                                - format: uuid
+                                  nullable: true
+                                  type: string
+                            documentNumberForTaxSlip:
+                              nullable: true
+                            documentTimeForTaxSlip:
+                              nullable: true
+                            documentUrlForTaxSlip:
+                              nullable: true
+                            employeeBpjsInfo:
+                              nullable: true
+                            employeeCode:
+                              type: string
+                            employeeDetailBirthDate:
+                              format: date-time
+                              type: string
+                            employeeDetailBirthPlace:
+                              anyOf:
+                                - nullable: true
+                                  type: string
+                            employeeDetailEmergencyContact:
+                              nullable: true
+                            employeeDetailEmergencyContactName:
+                              nullable: true
+                            employeeDetailGender:
+                              enum:
+                                - male
+                                - female
+                              title: EmployeeDetailGender
+                              type: string
+                            employeeDetailIdExpiration:
+                              anyOf:
+                                - format: date-time
+                                  nullable: true
+                                  type: string
+                            employeeDetailIdNumber:
+                              type: string
+                            employeeDetailIdType:
+                              enum:
+                                - KTP
+                              title: EmployeeDetailIDType
+                              type: string
+                            employeeDetailMaritalStatus:
+                              enum:
+                                - Single
+                                - Married
+                              title: EmployeeDetailMaritalStatus
+                              type: string
+                            employeeDetailNationality:
+                              enum:
+                                - Indonesia
+                                - Indonesian
+                                - indonesian
+                              title: EmployeeDetailNationality
+                              type: string
+                            employeeDetailPersonalEmail:
+                              anyOf:
+                                - nullable: true
+                                  type: string
+                            employeeDetailPhone:
+                              type: string
+                            employeeDetailRelationWithEmergencyContact:
+                              nullable: true
+                            employeeDetailReligion:
+                              enum:
+                                - Buddha
+                                - Catholic
+                                - Christian
+                              title: EmployeeDetailReligion
+                              type: string
+                            employeeDetailResidentialAddress:
+                              anyOf:
+                                - enum:
+                                    - Medan
+                                    - salak
+                                    - ''
+                                  nullable: true
+                                  title: EmployeeDetailResidentialAddress
+                                  type: string
+                            employeeStatus:
+                              enum:
+                                - active
+                              title: EmployeeStatus
+                              type: string
+                            employeeType:
+                              enum:
+                                - permanent
+                                - contract
+                              title: EmployeeType
+                              type: string
+                            errorCounter:
+                              additionalProperties: false
+                              properties:
+                                fixedError:
+                                  type: integer
+                                totalRequiredField:
+                                  type: integer
+                              required: []
+                              title: ErrorCounter
+                              type: object
+                            errorFields:
+                              items: {}
+                              type: array
+                            hasPendingResignPayment:
+                              type: boolean
+                            hasPin:
+                              type: boolean
+                            id:
+                              format: uuid
+                              type: string
+                            importEmployeeId:
+                              anyOf:
+                                - format: uuid
+                                  nullable: true
+                                  type: string
+                            isBindedWithAdmin:
+                              type: boolean
+                            joinDate:
+                              format: date-time
+                              type: string
+                            joinDateWithoutTime:
+                              nullable: true
+                            name:
+                              type: string
+                            position:
+                              enum:
+                                - Manager
+                                - Associate
+                                - Staff
+                              title: Position
+                              type: string
+                            positionId:
+                              format: uuid
+                              type: string
+                            processorId:
+                              format: uuid
+                              type: string
+                            profilePictUrl:
+                              anyOf:
+                                - nullable: true
+                                  type: string
+                                  x-qt-uri-extensions:
+                                    - .jpeg
+                                    - .jpg
+                                  x-qt-uri-protocols:
+                                    - https
+                            resignDate:
+                              anyOf:
+                                - format: date-time
+                                  nullable: true
+                                  type: string
+                            resignDateWithoutTime:
+                              nullable: true
+                            salary:
+                              nullable: true
+                            salaryBasis:
+                              enum:
+                                - month
+                                - shift
+                              title: SalaryBasis
+                              type: string
+                            salaryInfo:
+                              nullable: true
+                            taxConfig:
+                              enum:
+                                - Gross
+                                - Gross Up
+                                - Nett
+                              title: TaxConfig
+                              type: string
+                            taxNpwp:
+                              anyOf:
+                                - nullable: true
+                                  type: string
+                            taxObjectCode:
+                              nullable: true
+                            taxPtkp:
+                              enum:
+                                - TK/0
+                                - TK/3
+                              title: TaxPtkp
+                              type: string
+                            taxStatus:
+                              type: integer
+                            taxStatusDesc:
+                              enum:
+                                - Pegawai Tetap
+                                - Pegawai Tidak Tetap
+                              title: TaxStatusDesc
+                              type: string
+                            updatedAt:
+                              format: date-time
+                              type: string
+                            userId:
+                              anyOf:
+                                - format: uuid
+                                  nullable: true
+                                  type: string
+                            version:
+                              type: integer
+                          required: []
+                          title: Doc
+                          type: object
+                        type: array
+                    required: []
+                    title: Data
+                    type: object
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisEmployeeListGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Employee List
+    parameters: []
+  /v2/hris/employee/one:
+    get:
+      description: ''
+      operationId: getV2HrisEmployeeOne
+      parameters:
+        - description: user_id_eq
+          in: query
+          name: user_id_eq
+          schema:
+            default: 00000000-65fa-cef3-9e50-c300135e6231
+            example: 00000000-65fa-cef3-9e50-c300135e6231
+            type: string
+        
+      responses:
+        '404':
+          content:
+            application/json:
+              example:
+                code: 404
+                data: null
+                info: employee not found
+                messageId: EMPLOYEE_NOT_FOUND
+                requestId: f0a5bf08-b12c-44e6-a958-eefcbf137b39
+                traceId: cb011087de677320528e4779f7c88499
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    nullable: true
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisEmployeeOneGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Employee One
+    parameters: []
+    post:
+      description: ''
+      operationId: postV2HrisEmployeeOne
+      parameters:
+        
+      requestBody:
+        content:
+          application/json:
+            example:
+              bankAccountHolder: John
+              bankAccountNumber: '23214122'
+              bankName: bca
+              benefits:
+                - absentProrate: false
+                  customized: false
+                  id: 33c29f51-8d24-4619-8fc4-a63e08f4615d
+                  jointHolidayProrate: true
+                  nationalHolidayProrate: true
+                  prorate: true
+                  taxable: true
+                  unpaidLeaveProrate: false
+                  value: 1000
+              branch: Headquarter
+              companyEmail: test@user.com
+              companyUnitItemIds:
+                - 1776d593-0179-49c8-8b97-a957eff7074b
+                - ca465d59-ccc5-4efe-ac4e-96cf634fd0af
+                - 77fa70f4-f89d-4c35-96e1-8539715c084a
+                - a5930b27-cd8b-4111-9677-e33d8703e085
+              currency: IDR
+              customData: []
+              department: Human Resources
+              directApprovalId: 512e19c9-eb6c-4f29-93c6-804ef0bc6af5
+              documents:
+                - host: production-sejutacita-id
+                  path: >-
+                    companies/4a358946-3e84-4d55-a586-07c848bababb/employee-documents/22f3eff0-14d5-451a-9f1a-50dea817e729/age.png
+              employeeCode: '21124312'
+              employeeDetailBirthDate: '2025-09-22'
+              employeeDetailEmergencyContact: '62863456121'
+              employeeDetailEmergencyContactName: jane
+              employeeDetailGender: Male
+              employeeDetailIdNumber: '3325425436545645'
+              employeeDetailIdType: KTP
+              employeeDetailMaritalStatus: Single
+              employeeDetailPersonalEmail: trdyt@gmail.com
+              employeeDetailPhone: '62856474592'
+              employeeDetailRelationWithEmergencyContact: Sister
+              employeeDetailReligion: Islam
+              employeeType: contract
+              name: test
+              paymentSchedule: Monthly
+              position: Manager
+              resignDate: '2025-09-30'
+              salary: 5000000
+              salaryBasis: month
+              shiftId: 258cfbd5-5459-4971-877f-d7373a802c68
+              startDate: '2025-09-21'
+              taxConfig: Nett
+              taxNpwp: '213214312432334'
+              taxPtkp: TK/0
+              taxStatus: Pegawai Tidak Tetap
+            schema:
+              additionalProperties: false
+              properties:
+                bankAccountHolder:
+                  type: string
+                bankAccountNumber:
+                  format: integer
+                  type: string
+                bankName:
+                  type: string
+                benefits:
+                  items:
+                    additionalProperties: false
+                    properties:
+                      absentProrate:
+                        type: boolean
+                      customized:
+                        type: boolean
+                      id:
+                        format: uuid
+                        type: string
+                      jointHolidayProrate:
+                        type: boolean
+                      nationalHolidayProrate:
+                        type: boolean
+                      prorate:
+                        type: boolean
+                      taxable:
+                        type: boolean
+                      unpaidLeaveProrate:
+                        type: boolean
+                      value:
+                        type: integer
+                    required: []
+                    title: Benefit
+                    type: object
+                  type: array
+                branch:
+                  type: string
+                companyEmail:
+                  type: string
+                companyUnitItemIds:
+                  items:
+                    format: uuid
+                    type: string
+                  type: array
+                currency:
+                  type: string
+                customData:
+                  items: {}
+                  type: array
+                department:
+                  type: string
+                directApprovalId:
+                  format: uuid
+                  type: string
+                documents:
+                  items:
+                    additionalProperties: false
+                    properties:
+                      host:
+                        type: string
+                      path:
+                        type: string
+                    required: []
+                    title: Document
+                    type: object
+                  type: array
+                employeeCode:
+                  format: integer
+                  type: string
+                employeeDetailBirthDate:
+                  format: date
+                  type: string
+                employeeDetailEmergencyContact:
+                  type: string
+                employeeDetailEmergencyContactName:
+                  type: string
+                employeeDetailGender:
+                  type: string
+                employeeDetailIdNumber:
+                  type: string
+                employeeDetailIdType:
+                  type: string
+                employeeDetailMaritalStatus:
+                  type: string
+                employeeDetailPersonalEmail:
+                  type: string
+                employeeDetailPhone:
+                  type: string
+                employeeDetailRelationWithEmergencyContact:
+                  type: string
+                employeeDetailReligion:
+                  type: string
+                employeeType:
+                  type: string
+                name:
+                  type: string
+                paymentSchedule:
+                  type: string
+                position:
+                  type: string
+                resignDate:
+                  format: date
+                  type: string
+                salary:
+                  type: integer
+                salaryBasis:
+                  type: string
+                shiftId:
+                  format: uuid
+                  type: string
+                startDate:
+                  format: date
+                  type: string
+                taxConfig:
+                  type: string
+                taxNpwp:
+                  type: string
+                taxPtkp:
+                  type: string
+                taxStatus:
+                  type: string
+              required: []
+              title: V2HrisEmployeeOnePostRequest
+              type: object
+        required: true
+      responses:
+        '400':
+          content:
+            multipart/form-data:
+              schema:
+                properties:
+                  filename:
+                    description: ''
+                    format: binary
+                    type: string
+                type: object
+          description: ''
+      summary: Post V 2 Hris Employee One
+  /v2/hris/employee/stat:
+    get:
+      description: ''
+      operationId: getV2HrisEmployeeStat
+      parameters:
+        - description: company_id_eq
+          in: query
+          name: company_id_eq
+          schema:
+            default: 4a358946-3e84-4d55-a586-07c848bababb
+            example: 4a358946-3e84-4d55-a586-07c848bababb
+            type: string
+        - description: accumulator
+          in: query
+          name: accumulator
+          schema:
+            default: count
+            example: count
+            type: string
+        - description: for_feature
+          in: query
+          name: for_feature
+          schema:
+            default: employee
+            example: employee
+            type: string
+        - description: employee_status_in
+          in: query
+          name: employee_status_in
+          schema:
+            default: active
+            example: active
+            type: string
+        
+        - description: search
+          in: query
+          name: search
+          schema:
+            default: ''
+            example: ''
+            type: string
+        - description: group
+          in: query
+          name: group
+          schema:
+            default: branch
+            example: branch
+            type: string
+        - description: sort
+          in: query
+          name: sort
+          schema:
+            default: branch
+            example: branch
+            type: string
+        - description: limit
+          in: query
+          name: limit
+          schema:
+            default: '100'
+            example: '100'
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  docs:
+                    - branch: null
+                      branchId: null
+                      companyId: null
+                      count: 13
+                      createdAt: null
+                      deletedAt: null
+                      department: Human Resources
+                      departmentId: null
+                      employmentStatus: null
+                      employmentType: null
+                      joinDate: null
+                      joinDateWithoutTime: null
+                      name: null
+                      position: null
+                      positionId: null
+                      profilePictUrl: null
+                      requiredDocumentFulfilled: null
+                      resignDate: null
+                      resignDateWithoutTime: null
+                      salary: null
+                      updatedAt: null
+                    - branch: null
+                      branchId: null
+                      companyId: null
+                      count: 1
+                      createdAt: null
+                      deletedAt: null
+                      department: Product
+                      departmentId: null
+                      employmentStatus: null
+                      employmentType: null
+                      joinDate: null
+                      joinDateWithoutTime: null
+                      name: null
+                      position: null
+                      positionId: null
+                      profilePictUrl: null
+                      requiredDocumentFulfilled: null
+                      resignDate: null
+                      resignDateWithoutTime: null
+                      salary: null
+                      updatedAt: null
+                    - branch: null
+                      branchId: null
+                      companyId: null
+                      count: 1
+                      createdAt: null
+                      deletedAt: null
+                      department: Sales
+                      departmentId: null
+                      employmentStatus: null
+                      employmentType: null
+                      joinDate: null
+                      joinDateWithoutTime: null
+                      name: null
+                      position: null
+                      positionId: null
+                      profilePictUrl: null
+                      requiredDocumentFulfilled: null
+                      resignDate: null
+                      resignDateWithoutTime: null
+                      salary: null
+                      updatedAt: null
+                info: Success
+                messageId: SUCCESS
+                requestId: 716ee5cc-7062-4ba4-8eea-ecab6cc899be
+                traceId: 5dbf27422e6de1fd3d6d1232d01b06aa
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      docs:
+                        items:
+                          additionalProperties: false
+                          properties:
+                            branch:
+                              anyOf:
+                                - nullable: true
+                                  type: string
+                            branchId:
+                              nullable: true
+                            companyId:
+                              nullable: true
+                            count:
+                              type: integer
+                            createdAt:
+                              nullable: true
+                            deletedAt:
+                              nullable: true
+                            department:
+                              anyOf:
+                                - nullable: true
+                                  type: string
+                            departmentId:
+                              nullable: true
+                            employmentStatus:
+                              nullable: true
+                            employmentType:
+                              nullable: true
+                            joinDate:
+                              nullable: true
+                            joinDateWithoutTime:
+                              nullable: true
+                            name:
+                              nullable: true
+                            position:
+                              nullable: true
+                            positionId:
+                              nullable: true
+                            profilePictUrl:
+                              nullable: true
+                            requiredDocumentFulfilled:
+                              nullable: true
+                            resignDate:
+                              nullable: true
+                            resignDateWithoutTime:
+                              nullable: true
+                            salary:
+                              nullable: true
+                            updatedAt:
+                              nullable: true
+                          required: []
+                          title: Doc
+                          type: object
+                        type: array
+                    required: []
+                    title: Data
+                    type: object
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisEmployeeStatGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Employee Stat
+    parameters: []
+  /v2/hris/leave-policy/list:
+    get:
+      description: ''
+      operationId: getV2HrisLeavePolicyList
+      parameters:
+        - description: offset
+          in: query
+          name: offset
+          schema:
+            default: '0'
+            example: '0'
+            type: string
+        - description: search
+          in: query
+          name: search
+          schema:
+            default: ''
+            example: ''
+            type: string
+        - description: category_in
+          in: query
+          name: category_in
+          schema:
+            default: annualLeave
+            example: annualLeave
+            type: string
+        - description: limit
+          in: query
+          name: limit
+          schema:
+            default: '15'
+            example: '15'
+            type: string
+        
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                data:
+                  docs:
+                    - allowLeaveDebt: false
+                      annualLeavePolicy:
+                        annualLeavePolicyProgressive: null
+                        carryForwardAmountDay: 0
+                        carryForwardExpireMonth: null
+                        carryForwardRule: discard
+                        createdAt: '2024-07-09T09:46:03.831513Z'
+                        firstYearExpiredMonth: null
+                        firstYearIsActivated: false
+                        firstYearMinWorkingDurationMonth: null
+                        firstYearNumberOfBalance: null
+                        id: 19972da1-6b11-4f7a-838b-763343352602
+                        jointHolidayPolicy: notMandatory
+                        leavePolicyId: 3eef496b-4924-40b4-b8dd-a88a7c1cd151
+                        type: overtime
+                        typeMonthlyCalculateBalanceType: null
+                        typeMonthlyExpireAfterMonth: null
+                        typeMonthlyExpireCustomDateDay: null
+                        typeMonthlyExpireCustomDateMinimumValidityMonth: null
+                        typeMonthlyExpireCustomDateMonth: null
+                        typeMonthlyMinWorkingDurationMonth: null
+                        updatedAt: '2024-07-09T09:46:03.831513Z'
+                      attachmentIsRequired: false
+                      attendanceStatus:
+                        action: changeStatus
+                        companyId: 4a358946-3e84-4d55-a586-07c848bababb
+                        createdAt: '2024-07-09T09:46:03.831513Z'
+                        default: false
+                        id: 4b105748-b180-4fca-aead-3460bdaafe2c
+                        name: Cuti Pengganti Lembur
+                        sequence: 31
+                        type: leavePolicy
+                        updatedAt: '2024-07-09T09:46:03.831513Z'
+                      attendanceStatusId: 4b105748-b180-4fca-aead-3460bdaafe2c
+                      category: annualLeave
+                      createdAt: '2024-07-09T09:46:03.831513Z'
+                      description: overtime leave
+                      eligibleEmployeeCompanyUnitItemIds: []
+                      eligibleEmployeeEmploymentStatuses: []
+                      eligibleForAllEmployees: true
+                      employeeEligibilities: {}
+                      employeesCompanyUnitItemCount: 15
+                      halfDayDuration: null
+                      id: 3eef496b-4924-40b4-b8dd-a88a7c1cd151
+                      isAllowDelete: false
+                      isDeleted: false
+                      isMaxLeaveDurationUnlimited: true
+                      lastModifiedBy: null
+                      lastModifiedById: null
+                      maxLeaveDurationDay: null
+                      maxRequestDate: null
+                      maxWaitingTimeAutoApproveDay: 0
+                      updatedAt: '2024-07-09T09:46:03.831513Z'
+                  page: 1
+                  totalDocs: 1
+                  totalPages: 1
+                messageId: SUCCESS
+              schema:
+                additionalProperties: false
+                properties:
+                  data:
+                    additionalProperties: false
+                    properties:
+                      docs:
+                        items:
+                          additionalProperties: false
+                          properties:
+                            allowLeaveDebt:
+                              type: boolean
+                            annualLeavePolicy:
+                              additionalProperties: false
+                              properties:
+                                annualLeavePolicyProgressive:
+                                  nullable: true
+                                carryForwardAmountDay:
+                                  type: integer
+                                carryForwardExpireMonth:
+                                  nullable: true
+                                carryForwardRule:
+                                  type: string
+                                createdAt:
+                                  format: date-time
+                                  type: string
+                                firstYearExpiredMonth:
+                                  nullable: true
+                                firstYearIsActivated:
+                                  type: boolean
+                                firstYearMinWorkingDurationMonth:
+                                  nullable: true
+                                firstYearNumberOfBalance:
+                                  nullable: true
+                                id:
+                                  format: uuid
+                                  type: string
+                                jointHolidayPolicy:
+                                  type: string
+                                leavePolicyId:
+                                  format: uuid
+                                  type: string
+                                type:
+                                  type: string
+                                typeMonthlyCalculateBalanceType:
+                                  nullable: true
+                                typeMonthlyExpireAfterMonth:
+                                  nullable: true
+                                typeMonthlyExpireCustomDateDay:
+                                  nullable: true
+                                typeMonthlyExpireCustomDateMinimumValidityMonth:
+                                  nullable: true
+                                typeMonthlyExpireCustomDateMonth:
+                                  nullable: true
+                                typeMonthlyMinWorkingDurationMonth:
+                                  nullable: true
+                                updatedAt:
+                                  format: date-time
+                                  type: string
+                              required: []
+                              title: AnnualLeavePolicy
+                              type: object
+                            attachmentIsRequired:
+                              type: boolean
+                            attendanceStatus:
+                              additionalProperties: false
+                              properties:
+                                action:
+                                  type: string
+                                companyId:
+                                  format: uuid
+                                  type: string
+                                createdAt:
+                                  format: date-time
+                                  type: string
+                                default:
+                                  type: boolean
+                                id:
+                                  format: uuid
+                                  type: string
+                                name:
+                                  type: string
+                                sequence:
+                                  type: integer
+                                type:
+                                  type: string
+                                updatedAt:
+                                  format: date-time
+                                  type: string
+                              required: []
+                              title: AttendanceStatus
+                              type: object
+                            attendanceStatusId:
+                              format: uuid
+                              type: string
+                            category:
+                              type: string
+                            createdAt:
+                              format: date-time
+                              type: string
+                            description:
+                              type: string
+                            eligibleEmployeeCompanyUnitItemIds:
+                              items: {}
+                              type: array
+                            eligibleEmployeeEmploymentStatuses:
+                              items: {}
+                              type: array
+                            eligibleForAllEmployees:
+                              type: boolean
+                            employeeEligibilities:
+                              additionalProperties: false
+                              title: EmployeeEligibilities
+                              type: object
+                            employeesCompanyUnitItemCount:
+                              type: integer
+                            halfDayDuration:
+                              nullable: true
+                            id:
+                              format: uuid
+                              type: string
+                            isAllowDelete:
+                              type: boolean
+                            isDeleted:
+                              type: boolean
+                            isMaxLeaveDurationUnlimited:
+                              type: boolean
+                            lastModifiedBy:
+                              nullable: true
+                            lastModifiedById:
+                              nullable: true
+                            maxLeaveDurationDay:
+                              nullable: true
+                            maxRequestDate:
+                              nullable: true
+                            maxWaitingTimeAutoApproveDay:
+                              type: integer
+                            updatedAt:
+                              format: date-time
+                              type: string
+                          required: []
+                          title: Doc
+                          type: object
+                        type: array
+                      page:
+                        type: integer
+                      totalDocs:
+                        type: integer
+                      totalPages:
+                        type: integer
+                    required: []
+                    title: Data
+                    type: object
+                  messageId:
+                    type: string
+                required: []
+                title: V2HrisLeavePolicyListGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Leave Policy List
+    parameters: []
+  /v2/hris/shift/per-branch/list:
+    get:
+      description: ''
+      operationId: getV2HrisShiftPerBranchList
+      parameters:
+        - description: limit
+          in: query
+          name: limit
+          schema:
+            default: '1000'
+            example: '1000'
+            type: string
+        
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                data:
+                  docs:
+                    - branch: Headquarter
+                      shifts:
+                        - id: 258cfbd5-5459-4971-877f-d7373a802c68
+                          name: General Shift
+                    - branch: Sumbagut
+                      shifts:
+                        - id: d3831b38-35aa-494a-8ffa-0c091ca53d9f
+                          name: hh
+                  page: 1
+                  totalDocs: 2
+                  totalPages: 1
+                messageId: SUCCESS
+              schema:
+                additionalProperties: false
+                properties:
+                  data:
+                    additionalProperties: false
+                    properties:
+                      docs:
+                        items:
+                          additionalProperties: false
+                          properties:
+                            branch:
+                              type: string
+                            shifts:
+                              items:
+                                additionalProperties: false
+                                properties:
+                                  id:
+                                    format: uuid
+                                    type: string
+                                  name:
+                                    type: string
+                                required: []
+                                title: Shift
+                                type: object
+                              type: array
+                          required: []
+                          title: Doc
+                          type: object
+                        type: array
+                      page:
+                        type: integer
+                      totalDocs:
+                        type: integer
+                      totalPages:
+                        type: integer
+                    required: []
+                    title: Data
+                    type: object
+                  messageId:
+                    type: string
+                required: []
+                title: V2HrisShiftPerBranchListGetRequest
+                type: object
+          description: ''
+      summary: Get V 2 Hris Shift Per Branch List
+    parameters: []
+  /v2/hris/import-employee/file:
+    parameters: []
+    post:
+      description: ''
+      operationId: Bulk Add Employee
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  format: binary
+                  type: string
+              required:
+                - file
+              type: object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              example:
+                code: 200
+                data:
+                  doc:
+                    id: "9781c163-cd31-410d-9420-dd255533ca27"
+                    companyId: "4a358946-3e84-4d55-a586-07c848bababb"
+                    processorId: "684a62c8-c833-45c9-b76c-d6b4a46c2d68"
+                    filename: "HRIS Kantorku – Template Import Karyawan.xlsx"
+                    link: "uploads/HRIS Kantorku – Template Import Karyawan.xlsx"
+                    valid: 0
+                    invalid: 1
+                    total: 1
+                    expiredAt: "2025-10-21T01:43:49+07:00"
+                    createdAt: "2025-09-21T01:43:49+07:00"
+                    updatedAt: "2025-09-21T01:43:49+07:00"
+                messageId: SUCCESS
+                requestId: bba5bf08-b12c-44e6-a958-eefcbf137b39
+                traceId: a5f9811a4cb69e0fa49ea4a4c4a72e11
+              schema:
+                additionalProperties: false
+                properties:
+                  code:
+                    type: integer
+                  data:
+                    additionalProperties: false
+                    properties:
+                      doc:
+                        additionalProperties: false
+                        properties:
+                          id:
+                            format: uuid
+                            type: string
+                          companyId:
+                            format: uuid
+                            type: string
+                          processorId:
+                            format: uuid
+                            type: string
+                          filename:
+                            type: string
+                          link:
+                            type: string
+                          valid:
+                            type: integer
+                          invalid:
+                            type: integer
+                          total:
+                            type: integer
+                          createdAt:
+                            format: date-time
+                            type: string
+                          expiredAt:
+                            nullable: true
+                          updatedAt:
+                            format: date-time
+                            type: string
+                        required: []
+                        title: Doc
+                        type: object
+                    required: []
+                    title: Data
+                    type: object
+                  info:
+                    type: string
+                  messageId:
+                    type: string
+                  requestId:
+                    format: uuid
+                    type: string
+                  traceId:
+                    type: string
+                required: []
+                title: V2HrisEmployeeDocumentOnePostRequest
+                type: object
+          description: ''
+      summary: Post V 2 Hris Employee Document One
+servers:
+  - url: https://api.sejutacita.id
